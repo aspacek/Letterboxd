@@ -239,6 +239,19 @@ directors = directors+extra_directors
 years = years+extra_years
 runtimes=runtimes+extra_runtimes
 
+# Read in films to ignore when grabbing filmographies:
+ignorefilmsdatapath = Path('Films-that-dont-count.txt')
+ignorefilms = 0
+if ignorefilmsdatapath.exists():
+	ignorefilms = 1
+	filmstoignore = []
+	whotoignore = []
+	with open('Films-that-dont-count.txt') as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=',')
+		for row in csv_reader:
+			filmstoignore = filmstoignore+[row[0]]
+			whotoignore = whotoignore+[row[1]]
+
 # Film by film, get the director
 # Then check all other directors
 # Compile all films by the same director together
@@ -253,21 +266,35 @@ for i in range(len(films)):
 		checked[i] = 1
 		if directors[i] != 'none':
 			if runtimes[i] >= 40:
-				count = count+1
-				new_directors = new_directors+[directors[i]]
-				number_seen = number_seen+[1]
-				if ratings[i] == '0':
-					number_rated = number_rated+[0]
-				else:
-					number_rated = number_rated+[1]
-				for j in range(len(films)):
-					if checked[j] == 0:
-						if directors[j] == directors[i]:
-							checked[j] = 1
-							if runtimes[j] >= 40:
-								number_seen[count] = number_seen[count]+1
-								if ratings[j] != '0':
-									number_rated[count] = number_rated[count]+1
+				skipflag = 0
+				if ignorefilms == 1:
+					for j in range(len(filmstoignore)):
+						if filmstoignore[j] == films[i]:
+							if whotoignore[j] == 'all' or whotoignore[j] == directors[i]:
+								skipflag = 1
+				if skipflag == 0:
+					count = count+1
+					new_directors = new_directors+[directors[i]]
+					number_seen = number_seen+[1]
+					if ratings[i] == '0':
+						number_rated = number_rated+[0]
+					else:
+						number_rated = number_rated+[1]
+					for j in range(len(films)):
+						if checked[j] == 0:
+							if directors[j] == directors[i]:
+								checked[j] = 1
+								if runtimes[j] >= 40:
+									skipflag2 = 0
+									if ignorefilms == 1:
+										for k in range(len(filmstoignore)):
+											if filmstoignore[k] == films[j]:
+												if whotoignore[k] == 'all' or whotoignore[k] == directors[j]:
+													skipflag2 = 1
+									if skipflag2 == 0:
+										number_seen[count] = number_seen[count]+1
+										if ratings[j] != '0':
+											number_rated[count] = number_rated[count]+1
 
 # Rank directors by number of films rated:
 number_rated_temp = [val for val in number_rated]
@@ -302,8 +329,15 @@ for i in range(len(sdirectors)):
 			if directors[j] == sdirectors[i]:
 				if runtimes[j] >= 40:
 					if ratings[j] != '0':
-						ratingsum = ratingsum+int(ratings[j])
-						ratingnum = ratingnum+1
+						skipflag = 0
+						if ignorefilms == 1:
+							for k in range(len(filmstoignore)):
+								if filmstoignore[k] == films[j]:
+									if whotoignore[k] == 'all' or whotoignore[k] == sdirectors[i]:
+										skipflag = 1
+						if skipflag == 0:
+							ratingsum = ratingsum+int(ratings[j])
+							ratingnum = ratingnum+1
 		ratingavg = ratingsum/ratingnum
 		finalavgratings = finalavgratings+[ratingavg]
 
@@ -403,10 +437,17 @@ for i in range(len(sfdirectors)):
 	for j in range(len(films)):
 		if directors[j] == sfdirectors[i]:
 			if runtimes[j] >= 40:
-				if ratings[j] == '0':
-					print('   '+films[j])
-				else:
-					print('** '+films[j])
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == films[j]:
+							if whotoignore[k] == 'all' or whotoignore[k] == sfdirectors[i]:
+								skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
 	print('Avg rating = '+str(sfavgratings[i]/2))
 	print('Number seen = '+str(sfseen[i]))
 	print('Number rated = '+str(sfrated[i]))
@@ -501,20 +542,77 @@ for i in range(len(finaldirectorsX)):
 	for j in range(len(films)):
 		if directors[j] == finaldirectorsX[i]:
 			if runtimes[j] >= 40:
-				if ratings[j] == '0':
-					print('   '+films[j])
-				else:
-					print('** '+films[j])
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == films[j]:
+							if whotoignore[k] == 'all' or whotoignore[k] == finaldirectorsX[i]:
+								skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
 
 # Also keep all directors with at least 5 watched films and less than 4 rated films
+# Rank by number seen, then number rated:
 finaldirectors2 = []
 finalseen2 = []
 finalrated2 = []
 for i in range(len(sdirectors2)):
 	if sseen2[i] >= 5 and srated2[i] <= 3:
-		finaldirectors2 = finaldirectors2+[sdirectors2[i]]
-		finalseen2 = finalseen2+[sseen2[i]]
-		finalrated2 = finalrated2+[srated2[i]]
+		if len(finaldirectors2) > 0:
+			ratesortflag = 0
+			j = 0
+			maxloc = -1
+			minloc = -1
+			while ratesortflag == 0 and j < len(finaldirectors2):
+				if finalseen2[j] == sseen2[i]:
+					if finalrated2[j] > srated2[i]:
+						maxloc = j
+					elif finalrated2[j] == srated2[i]:
+						loc = j
+						ratesortflag = 1
+					elif minloc == -1 and finalrated2[j] < srated2[i]:
+						minloc = j
+				j = j+1
+			# No other directors with the same number seen ranked yet
+			# Put current director at the end of the list:
+			if ratesortflag == 0 and maxloc == -1 and minloc == -1:
+				finaldirectors2 = finaldirectors2+[sdirectors2[i]]
+				finalseen2 = finalseen2+[sseen2[i]]
+				finalrated2 = finalrated2+[srated2[i]]
+			# Same number seen already ranked, but only with higher number rated
+			# Put current director at the end of the list:
+			elif ratesortflag == 0 and maxloc > -1 and minloc == -1:
+				finaldirectors2 = finaldirectors2+[sdirectors2[i]]
+				finalseen2 = finalseen2+[sseen2[i]]
+				finalrated2 = finalrated2+[srated2[i]]
+			# Same number seen already ranked, but only with lower number rated
+			# Put current director just above the location of the first lower number rated:
+			elif ratesortflag == 0 and maxloc == -1 and minloc > -1:
+				finaldirectors2.insert(minloc,sdirectors2[i])
+				finalseen2.insert(minloc,sseen2[i])
+				finalrated2.insert(minloc,srated2[i])
+			# Same number seen already ranked, with both higher and lower number rated
+			# Put current director just above the location of the first lower number rated:
+			elif ratesortflag == 0 and maxloc > -1 and minloc > -1:
+				finaldirectors2.insert(minloc,sdirectors2[i])
+				finalseen2.insert(minloc,sseen2[i])
+				finalrated2.insert(minloc,srated2[i])
+			# Same number seen already ranked, exacted number rated found
+			# Put current director just above the location of the first same number rated:
+			elif ratesortflag == 1:
+				finaldirectors2.insert(loc,sdirectors2[i])
+				finalseen2.insert(loc,sseen2[i])
+				finalrated2.insert(loc,srated2[i])
+			# Shouldn't get this far:
+			else:
+				sys.exit('ERROR - in main code - Something wrong with num seen + num rated sorting.')
+		else:
+			finaldirectors2 = finaldirectors2+[sdirectors2[i]]
+			finalseen2 = finalseen2+[sseen2[i]]
+			finalrated2 = finalrated2+[srated2[i]]
 
 # Save the results to a temporary file:
 with open('Directors-league-data-other-temp-new.csv', mode='w') as outfile:
@@ -596,10 +694,17 @@ for i in range(len(finaldirectors2)):
 	for j in range(len(films)):
 		if directors[j] == finaldirectors2[i]:
 			if runtimes[j] >= 40:
-				if ratings[j] == '0':
-					print('   '+films[j])
-				else:
-					print('** '+films[j])
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == films[j]:
+							if whotoignore[k] == 'all' or whotoignore[k] == finaldirectors2[i]:
+								skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
 
 # Remove temporary files:
 os.remove('Directors-league-data-temp-new.csv')
