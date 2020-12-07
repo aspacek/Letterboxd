@@ -386,7 +386,7 @@ if datapath.exists():
 				if saveddirectors[i] == finaldirectors[j]:
 					removedirectorflag = 1
 					if savedavgratings[i] != finalavgratings[j]:
-						print(saveddirectors[i]+' - Avg Rating Changed To '+str(finalavgratings[j]))
+						print(saveddirectors[i]+' - Avg Rating Changed To '+str(finalavgratings[j]/2))
 					if savedseen[i] != finalseen[j]:
 						print(saveddirectors[i]+' - Num Seen Changed To '+str(finalseen[j]))
 					if savedrated[i] != finalrated[j]:
@@ -404,7 +404,7 @@ if datapath.exists():
 				j = j+1
 			if newdirectorflag == 0:
 				print(finaldirectors[i]+' - New Director To Add!')
-				print(' - Avg Rating = '+str(finalavgratings[i]))
+				print(' - Avg Rating = '+str(finalavgratings[i]/2))
 				print(' - Num Seen = '+str(finalseen[i]))
 				print(' - Num Rated = '+str(finalrated[i]))
 	else:
