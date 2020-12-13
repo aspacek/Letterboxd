@@ -125,6 +125,23 @@ def numsort(arraytosort,arraytomatch,isstring,highestfirst):
 # Ask for username:
 user = input('\nEnter Letterboxd username: ')
 
+# Save backups of all output files in case something goes wrong:
+outputpath1 = Path('Directors-league-data-'+user+'.csv')
+outputpath2 = Path('Directors-league-data-'+user+'-X.csv')
+outputpath3 = Path('Directors-league-data-'+user+'-other.csv')
+outputpath1exists = 0
+outputpath2exists = 0
+outputpath3exists = 0
+if outputpath1.exists():
+	outputpath1exists = 1
+	copyfile('Directors-league-data-'+user+'.csv','Directors-league-data-'+user+'-saved.csv')
+if outputpath2.exists():
+	outputpath2exists = 1
+	copyfile('Directors-league-data-'+user+'-X.csv','Directors-league-data-'+user+'-X-saved.csv')
+if outputpath3.exists():
+	outputpath3exists = 1
+	copyfile('Directors-league-data-'+user+'.csv','Directors-league-data-'+user+'-other-saved.csv')
+
 # The base url:
 url = 'https://letterboxd.com/'+user+'/films/'
 # Grab source code for the first page:
@@ -342,13 +359,13 @@ for i in range(len(sdirectors)):
 		finalavgratings = finalavgratings+[ratingavg]
 
 # Save the results to a temporary file:
-with open('Directors-league-data-temp-new.csv', mode='w') as outfile:
+with open('Directors-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finaldirectors)):
 		csvwriter.writerow([finaldirectors[i],finalavgratings[i],finalseen[i],finalrated[i]])
 
 # Check if saved file exists:
-datapath = Path('Directors-league-data.csv')
+datapath = Path('Directors-league-data-'+user+'.csv')
 datapathexists = 0
 if datapath.exists():
 	datapathexists = 1
@@ -360,7 +377,7 @@ if datapath.exists():
 	savedavgratings = []
 	savedseen = []
 	savedrated = []
-	with open('Directors-league-data.csv') as csv_file:
+	with open('Directors-league-data-'+user+'.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			saveddirectors = saveddirectors+[row[0]]
@@ -412,9 +429,9 @@ if datapath.exists():
 
 # Copy old save file to a temporary file:
 if datapathexists == 1:
-	copyfile('Directors-league-data.csv','Directors-league-data-temp-old.csv')
+	copyfile('Directors-league-data-'+user+'.csv','Directors-league-data-'+user+'-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Directors-league-data-temp-new.csv','Directors-league-data.csv')
+copyfile('Directors-league-data-'+user+'-temp-new.csv','Directors-league-data-'+user+'.csv')
 
 # Sort by average rating:
 finalavgratings_temp = [val for val in finalavgratings]
@@ -463,13 +480,13 @@ for i in range(len(sdirectors2)):
 		finalratedX = finalratedX+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Directors-league-data-X-temp-new.csv', mode='w') as outfile:
+with open('Directors-league-data-'+user+'-X-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finaldirectorsX)):
 		csvwriter.writerow([finaldirectorsX[i],finalseenX[i],finalratedX[i]])
 
 # Check if saved file exists:
-datapathX = Path('Directors-league-data-X.csv')
+datapathX = Path('Directors-league-data-'+user+'-X.csv')
 datapathXexists = 0
 if datapathX.exists():
 	datapathXexists = 1
@@ -480,7 +497,7 @@ if datapathX.exists():
 	saveddirectorsX = []
 	savedseenX = []
 	savedratedX = []
-	with open('Directors-league-data-X.csv') as csv_file:
+	with open('Directors-league-data-'+user+'-X.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			saveddirectorsX = saveddirectorsX+[row[0]]
@@ -526,9 +543,9 @@ if datapathX.exists():
 
 # Copy old save file to a temporary file:
 if datapathXexists == 1:
-	copyfile('Directors-league-data-X.csv','Directors-league-data-X-temp-old.csv')
+	copyfile('Directors-league-data-'+user+'-X.csv','Directors-league-data-'+user+'-X-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Directors-league-data-X-temp-new.csv','Directors-league-data-X.csv')
+copyfile('Directors-league-data-'+user+'-X-temp-new.csv','Directors-league-data-'+user+'-X.csv')
 
 # Print 4-rated director candidates, films
 print('')
@@ -615,13 +632,13 @@ for i in range(len(sdirectors2)):
 			finalrated2 = finalrated2+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Directors-league-data-other-temp-new.csv', mode='w') as outfile:
+with open('Directors-league-data-'+user+'-other-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finaldirectors2)):
 		csvwriter.writerow([finaldirectors2[i],finalseen2[i],finalrated2[i]])
 
 # Check if saved file exists:
-datapath2 = Path('Directors-league-data-other.csv')
+datapath2 = Path('Directors-league-data-'+user+'-other.csv')
 datapath2exists = 0
 if datapath2.exists():
 	datapath2exists = 1
@@ -632,7 +649,7 @@ if datapath2.exists():
 	saveddirectors2 = []
 	savedseen2 = []
 	savedrated2 = []
-	with open('Directors-league-data-other.csv') as csv_file:
+	with open('Directors-league-data-'+user+'-other.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			saveddirectors2 = saveddirectors2+[row[0]]
@@ -678,9 +695,9 @@ if datapath2.exists():
 
 # Copy old save file to a temporary file:
 if datapath2exists == 1:
-	copyfile('Directors-league-data-other.csv','Directors-league-data-other-temp-old.csv')
+	copyfile('Directors-league-data-'+user+'-other.csv','Directors-league-data-'+user+'-other-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Directors-league-data-other-temp-new.csv','Directors-league-data-other.csv')
+copyfile('Directors-league-data-'+user+'-other-temp-new.csv','Directors-league-data-'+user+'-other.csv')
 
 # Print most-watched director candidates, films
 print('')
@@ -707,12 +724,18 @@ for i in range(len(finaldirectors2)):
 						print('** '+films[j])
 
 # Remove temporary files:
-os.remove('Directors-league-data-temp-new.csv')
-os.remove('Directors-league-data-X-temp-new.csv')
-os.remove('Directors-league-data-other-temp-new.csv')
+if outputpath1exists == 1:
+	os.remove('Directors-league-data-'+user+'-saved.csv')
+if outputpath2exists == 1:
+	os.remove('Directors-league-data-'+user+'-X-saved.csv')
+if outputpath3exists == 1:
+	os.remove('Directors-league-data-'+user+'-other-saved.csv')
+os.remove('Directors-league-data-'+user+'-temp-new.csv')
+os.remove('Directors-league-data-'+user+'-X-temp-new.csv')
+os.remove('Directors-league-data-'+user+'-other-temp-new.csv')
 if datapathexists == 1:
-	os.remove('Directors-league-data-temp-old.csv')
+	os.remove('Directors-league-data-'+user+'-temp-old.csv')
 if datapathXexists == 1:
-	os.remove('Directors-league-data-X-temp-old.csv')
+	os.remove('Directors-league-data-'+user+'-X-temp-old.csv')
 if datapath2exists == 1:
-	os.remove('Directors-league-data-other-temp-old.csv')
+	os.remove('Directors-league-data-'+user+'-other-temp-old.csv')
