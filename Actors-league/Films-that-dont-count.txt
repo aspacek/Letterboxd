@@ -10,6 +10,7 @@ beauty-and-the-beast-1991,Frank Welker
 between-two-ferns-the-movie,Benedict Cumberbatch
 between-two-ferns-the-movie,Paul Rudd
 between-two-ferns-the-movie,Will Ferrell
+black-mirror-uss-callister,Kirsten Dunst
 bo-burnham-make-happy,all
 bo-burnham-what,all
 the-boys-the-sherman-brothers-story,all
@@ -51,6 +52,8 @@ i-know-that-voice,all
 the-interview-2014,Joseph Gordon-Levitt
 jen-kirkman-im-gonna-die-alone-and-i-feel-fine,all
 jim-andy-the-great-beyond,all
+john-leguizamos-latin-history-for-morons,Mark Ruffalo
+kingpin,Will Ferrell
 labyrinth,Warwick Davis
 liar-liar,Will Ferrell
 the-little-mermaid,Frank Welker

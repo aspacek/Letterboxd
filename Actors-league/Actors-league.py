@@ -26,7 +26,7 @@ import os
 
 ##
 ## Written by Alex Spacek
-## November 2020
+## November 2020 - December 2020
 ##
 
 ##################################
@@ -124,6 +124,23 @@ def numsort(arraytosort,arraytomatch,isstring,highestfirst):
 
 # Ask for username:
 user = input('\nEnter Letterboxd username: ')
+
+# Save backups of all output files in case something goes wrong:
+outputpath1 = Path('Actors-league-data-'+user+'.csv')
+outputpath2 = Path('Actors-league-data-'+user+'-X.csv')
+outputpath3 = Path('Actors-league-data-'+user+'-other.csv')
+outputpath1exists = 0
+outputpath2exists = 0
+outputpath3exists = 0
+if outputpath1.exists():
+	outputpath1exists = 1
+	copyfile('Actors-league-data-'+user+'.csv','Actors-league-data-'+user+'-saved.csv')
+if outputpath2.exists():
+	outputpath2exists = 1
+	copyfile('Actors-league-data-'+user+'-X.csv','Actors-league-data-'+user+'-X-saved.csv')
+if outputpath3.exists():
+	outputpath3exists = 1
+	copyfile('Actors-league-data-'+user+'.csv','Actors-league-data-'+user+'-other-saved.csv')
 
 # The base url:
 url = 'https://letterboxd.com/'+user+'/films/'
@@ -349,13 +366,13 @@ for i in range(len(sactors)):
 		finalavgratings = finalavgratings+[ratingavg]
 
 # Save the results to a temporary file:
-with open('Actors-league-data-temp-new.csv', mode='w') as outfile:
+with open('Actors-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finalactors)):
 		csvwriter.writerow([finalactors[i],finalavgratings[i],finalseen[i],finalrated[i]])
 
 # Check if saved file exists:
-datapath = Path('Actors-league-data.csv')
+datapath = Path('Actors-league-data-'+user+'.csv')
 datapathexists = 0
 if datapath.exists():
 	datapathexists = 1
@@ -367,7 +384,7 @@ if datapath.exists():
 	savedavgratings = []
 	savedseen = []
 	savedrated = []
-	with open('Actors-league-data.csv') as csv_file:
+	with open('Actors-league-data-'+user+'.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			savedactors = savedactors+[row[0]]
@@ -419,9 +436,9 @@ if datapath.exists():
 
 # Copy old save file to a temporary file:
 if datapathexists == 1:
-	copyfile('Actors-league-data.csv','Actors-league-data-temp-old.csv')
+	copyfile('Actors-league-data-'+user+'.csv','Actors-league-data-'+user+'-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Actors-league-data-temp-new.csv','Actors-league-data.csv')
+copyfile('Actors-league-data-'+user+'-temp-new.csv','Actors-league-data-'+user+'.csv')
 
 # Sort by average rating:
 finalavgratings_temp = [val for val in finalavgratings]
@@ -470,13 +487,13 @@ for i in range(len(sactors2)):
 		finalratedX = finalratedX+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Actors-league-data-X-temp-new.csv', mode='w') as outfile:
+with open('Actors-league-data-'+user+'-X-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finalactorsX)):
 		csvwriter.writerow([finalactorsX[i],finalseenX[i],finalratedX[i]])
 
 # Check if saved file exists:
-datapathX = Path('Actors-league-data-X.csv')
+datapathX = Path('Actors-league-data-'+user+'-X.csv')
 datapathXexists = 0
 if datapathX.exists():
 	datapathXexists = 1
@@ -487,7 +504,7 @@ if datapathX.exists():
 	savedactorsX = []
 	savedseenX = []
 	savedratedX = []
-	with open('Actors-league-data-X.csv') as csv_file:
+	with open('Actors-league-data-'+user+'-X.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			savedactorsX = savedactorsX+[row[0]]
@@ -533,9 +550,9 @@ if datapathX.exists():
 
 # Copy old save file to a temporary file:
 if datapathXexists == 1:
-	copyfile('Actors-league-data-X.csv','Actors-league-data-X-temp-old.csv')
+	copyfile('Actors-league-data-'+user+'-X.csv','Actors-league-data-'+user+'-X-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Actors-league-data-X-temp-new.csv','Actors-league-data-X.csv')
+copyfile('Actors-league-data-'+user+'-X-temp-new.csv','Actors-league-data-'+user+'-X.csv')
 
 # Print 9-rated actor candidates, films
 print('')
@@ -622,13 +639,13 @@ for i in range(len(sactors2)):
 			finalrated2 = finalrated2+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Actors-league-data-other-temp-new.csv', mode='w') as outfile:
+with open('Actors-league-data-'+user+'-other-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finalactors2)):
 		csvwriter.writerow([finalactors2[i],finalseen2[i],finalrated2[i]])
 
 # Check if saved file exists:
-datapath2 = Path('Actors-league-data-other.csv')
+datapath2 = Path('Actors-league-data-'+user+'-other.csv')
 datapath2exists = 0
 if datapath2.exists():
 	datapath2exists = 1
@@ -639,7 +656,7 @@ if datapath2.exists():
 	savedactors2 = []
 	savedseen2 = []
 	savedrated2 = []
-	with open('Actors-league-data-other.csv') as csv_file:
+	with open('Actors-league-data-'+user+'-other.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			savedactors2 = savedactors2+[row[0]]
@@ -685,9 +702,9 @@ if datapath2.exists():
 
 # Copy old save file to a temporary file:
 if datapath2exists == 1:
-	copyfile('Actors-league-data-other.csv','Actors-league-data-other-temp-old.csv')
+	copyfile('Actors-league-data-'+user+'-other.csv','Actors-league-data-'+user+'-other-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Actors-league-data-other-temp-new.csv','Actors-league-data-other.csv')
+copyfile('Actors-league-data-'+user+'-other-temp-new.csv','Actors-league-data-'+user+'-other.csv')
 
 # Print most-watched actor candidates, films
 print('')
@@ -714,12 +731,18 @@ for i in range(len(finalactors2)):
 						print('** '+films[j])
 
 # Remove temporary files:
-os.remove('Actors-league-data-temp-new.csv')
-os.remove('Actors-league-data-X-temp-new.csv')
-os.remove('Actors-league-data-other-temp-new.csv')
+if outputpath1exists == 1:
+	os.remove('Actors-league-data-'+user+'-saved.csv')
+if outputpath2exists == 1:
+	os.remove('Actors-league-data-'+user+'-X-saved.csv')
+if outputpath3exists == 1:
+	os.remove('Actors-league-data-'+user+'-other-saved.csv')
+os.remove('Actors-league-data-'+user+'-temp-new.csv')
+os.remove('Actors-league-data-'+user+'-X-temp-new.csv')
+os.remove('Actors-league-data-'+user+'-other-temp-new.csv')
 if datapathexists == 1:
-	os.remove('Actors-league-data-temp-old.csv')
+	os.remove('Actors-league-data-'+user+'-temp-old.csv')
 if datapathXexists == 1:
-	os.remove('Actors-league-data-X-temp-old.csv')
+	os.remove('Actors-league-data-'+user+'-X-temp-old.csv')
 if datapath2exists == 1:
-	os.remove('Actors-league-data-other-temp-old.csv')
+	os.remove('Actors-league-data-'+user+'-other-temp-old.csv')
