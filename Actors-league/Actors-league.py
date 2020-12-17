@@ -148,7 +148,7 @@ url = 'https://letterboxd.com/'+user+'/films/'
 r = requests.get(url)
 source = r.text
 # Find the number of pages
-pages = int(getstrings('last','href="/moogic/films/page/','/">',source))
+pages = int(getstrings('last','href="/'+user+'/films/page/','/">',source))
 # Initialize results:
 films = []
 ratings = []
