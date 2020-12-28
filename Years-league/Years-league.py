@@ -257,7 +257,10 @@ for i in range(len(films)):
 					if ratings[i] == '0':
 						number_rated = number_rated+[0]
 					else:
-						number_rated = number_rated+[1]
+						if int(ratings[i]) >= 6:
+							number_rated = number_rated+[1]
+						else:
+							number_rated = number_rated+[0]
 					for j in range(len(films)):
 						if checked[j] == 0:
 							if years[j] == years[i]:
@@ -270,7 +273,7 @@ for i in range(len(films)):
 												skipflag2 = 1
 									if skipflag2 == 0:
 										number_seen[count] = number_seen[count]+1
-										if ratings[j] != '0':
+										if ratings[j] != '0' and int(ratings[j]) >= 6:
 											number_rated[count] = number_rated[count]+1
 
 # Rank years by number of films rated:
@@ -290,7 +293,7 @@ number_rated_temp = [val for val in number_rated]
 sseen2,srated2 = numsort(number_seen_temp,number_rated_temp,0,1)
 
 # Keep all years with at least 10 rated films
-# Get average rating
+# Get average rating of all 3+ star films
 finalyears = []
 finalavgratings = []
 finalseen = []
@@ -308,7 +311,7 @@ for i in range(len(syears)):
 		for j in range(len(films)):
 			if years[j] == syears[i]:
 				if runtimes[j] >= 40:
-					if ratings[j] != '0':
+					if ratings[j] != '0' and int(ratings[j]) >= 6:
 						skipflag = 0
 						if ignorefilms == 1:
 							for k in range(len(filmstoignore)):
@@ -424,6 +427,8 @@ for i in range(len(sfyears)):
 				if skipflag == 0:
 					if ratings[j] == '0':
 						print('   '+films[j])
+					elif int(ratings[j]) < 6:
+						print('-- '+films[j])
 					else:
 						print('** '+films[j])
 	print('Avg rating = '+str(sfavgratings[i]/2))
@@ -528,6 +533,8 @@ for i in range(len(finalyearsX)):
 				if skipflag == 0:
 					if ratings[j] == '0':
 						print('   '+films[j])
+					elif int(ratings[j]) < 6:
+						print('-- '+films[j])
 					else:
 						print('** '+films[j])
 
@@ -679,6 +686,8 @@ for i in range(len(finalyears2)):
 				if skipflag == 0:
 					if ratings[j] == '0':
 						print('   '+films[j])
+					elif int(ratings[j]) < 6:
+						print('-- '+films[j])
 					else:
 						print('** '+films[j])
 
