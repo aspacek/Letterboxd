@@ -140,7 +140,7 @@ if outputpath2.exists():
 	copyfile('Actors-league-data-'+user+'-X.csv','Actors-league-data-'+user+'-X-saved.csv')
 if outputpath3.exists():
 	outputpath3exists = 1
-	copyfile('Actors-league-data-'+user+'.csv','Actors-league-data-'+user+'-other-saved.csv')
+	copyfile('Actors-league-data-'+user+'-other.csv','Actors-league-data-'+user+'-other-saved.csv')
 
 # The base url:
 url = 'https://letterboxd.com/'+user+'/films/'
