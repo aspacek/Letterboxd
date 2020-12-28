@@ -220,6 +220,17 @@ for i in range(len(films)):
 		timeleft = filmsleft*timeperfilm
 		print('Estimated time remaining = '+str(int(timeleft/60))+' min')
 
+# Read in films to ignore:
+ignorefilmsdatapath = Path('Films-that-dont-count.txt')
+ignorefilms = 0
+if ignorefilmsdatapath.exists():
+	ignorefilms = 1
+	filmstoignore = []
+	with open('Films-that-dont-count.txt') as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=',')
+		for row in csv_reader:
+			filmstoignore = filmstoignore+[row[0]]
+
 # Film by film, get the year
 # Then check all other years
 # Compile all films from the same year together
@@ -234,21 +245,33 @@ for i in range(len(films)):
 		checked[i] = 1
 		if years[i] != 'none':
 			if runtimes[i] >= 40:
-				count = count+1
-				new_years = new_years+[years[i]]
-				number_seen = number_seen+[1]
-				if ratings[i] == '0':
-					number_rated = number_rated+[0]
-				else:
-					number_rated = number_rated+[1]
-				for j in range(len(films)):
-					if checked[j] == 0:
-						if years[j] == years[i]:
-							checked[j] = 1
-							if runtimes[j] >= 40:
-								number_seen[count] = number_seen[count]+1
-								if ratings[j] != '0':
-									number_rated[count] = number_rated[count]+1
+				skipflag = 0
+				if ignorefilms == 1:
+					for j in range(len(filmstoignore)):
+						if filmstoignore[j] == films[i]:
+							skipflag = 1
+				if skipflag == 0:
+					count = count+1
+					new_years = new_years+[years[i]]
+					number_seen = number_seen+[1]
+					if ratings[i] == '0':
+						number_rated = number_rated+[0]
+					else:
+						number_rated = number_rated+[1]
+					for j in range(len(films)):
+						if checked[j] == 0:
+							if years[j] == years[i]:
+								checked[j] = 1
+								if runtimes[j] >= 40:
+									skipflag2 = 0
+									if ignorefilms == 1:
+										for k in range(len(filmstoignore)):
+											if filmstoignore[k] == films[j]:
+												skipflag2 = 1
+									if skipflag2 == 0:
+										number_seen[count] = number_seen[count]+1
+										if ratings[j] != '0':
+											number_rated[count] = number_rated[count]+1
 
 # Rank years by number of films rated:
 number_rated_temp = [val for val in number_rated]
@@ -272,6 +295,9 @@ finalyears = []
 finalavgratings = []
 finalseen = []
 finalrated = []
+final4 = []
+final4p5 = []
+final5 = []
 for i in range(len(syears)):
 	if srated[i] >= 10:
 		finalyears = finalyears+[syears[i]]
@@ -283,8 +309,14 @@ for i in range(len(syears)):
 			if years[j] == syears[i]:
 				if runtimes[j] >= 40:
 					if ratings[j] != '0':
-						ratingsum = ratingsum+int(ratings[j])
-						ratingnum = ratingnum+1
+						skipflag = 0
+						if ignorefilms == 1:
+							for k in range(len(filmstoignore)):
+								if filmstoignore[k] == films[j]:
+									skipflag = 1
+						if skipflag == 0:
+							ratingsum = ratingsum+int(ratings[j])
+							ratingnum = ratingnum+1
 		ratingavg = ratingsum/ratingnum
 		finalavgratings = finalavgratings+[ratingavg]
 
@@ -384,10 +416,16 @@ for i in range(len(sfyears)):
 	for j in range(len(films)):
 		if years[j] == sfyears[i]:
 			if runtimes[j] >= 40:
-				if ratings[j] == '0':
-					print('   '+films[j])
-				else:
-					print('** '+films[j])
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == films[j]:
+							skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
 	print('Avg rating = '+str(sfavgratings[i]/2))
 	print('Number seen = '+str(sfseen[i]))
 	print('Number rated = '+str(sfrated[i]))
@@ -482,10 +520,16 @@ for i in range(len(finalyearsX)):
 	for j in range(len(films)):
 		if years[j] == finalyearsX[i]:
 			if runtimes[j] >= 40:
-				if ratings[j] == '0':
-					print('   '+films[j])
-				else:
-					print('** '+films[j])
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == films[j]:
+							skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
 
 # Also keep all years with at least 10 watched films and less than 9 rated films
 # Rank by number seen, then number rated:
@@ -627,10 +671,16 @@ for i in range(len(finalyears2)):
 	for j in range(len(films)):
 		if years[j] == finalyears2[i]:
 			if runtimes[j] >= 40:
-				if ratings[j] == '0':
-					print('   '+films[j])
-				else:
-					print('** '+films[j])
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == films[j]:
+							skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
 
 # Remove temporary files:
 if outputpath1exists == 1:
