@@ -293,8 +293,8 @@ for i in range(len(films)):
 			skipflag = 0
 			if ignorefilms == 1:
 				for j in range(len(filmstoignore)):
-					if filmstoignore[j] == films[i]:
-						if whotoignore[j] == 'all' or whotoignore[j] == actors[i]:
+					if filmstoignore[j] == 'xallx' or filmstoignore[j] == films[i]:
+						if whotoignore[j] == 'xallx' or whotoignore[j] == actors[i]:
 							skipflag = 1
 			if skipflag == 0:
 				count = count+1
@@ -312,8 +312,8 @@ for i in range(len(films)):
 								skipflag2 = 0
 								if ignorefilms == 1:
 									for k in range(len(filmstoignore)):
-										if filmstoignore[k] == films[j]:
-											if whotoignore[k] == 'all' or whotoignore[k] == actors[j]:
+										if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
+											if whotoignore[k] == 'xallx' or whotoignore[k] == actors[j]:
 												skipflag2 = 1
 								if skipflag2 == 0:
 									number_seen[count] = number_seen[count]+1
@@ -356,8 +356,8 @@ for i in range(len(sactors)):
 						skipflag = 0
 						if ignorefilms == 1:
 							for k in range(len(filmstoignore)):
-								if filmstoignore[k] == films[j]:
-									if whotoignore[k] == 'all' or whotoignore[k] == sactors[i]:
+								if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
+									if whotoignore[k] == 'xallx' or whotoignore[k] == sactors[i]:
 										skipflag = 1
 						if skipflag == 0:
 							ratingsum = ratingsum+int(ratings[j])
@@ -464,8 +464,8 @@ for i in range(len(sfactors)):
 				skipflag = 0
 				if ignorefilms == 1:
 					for k in range(len(filmstoignore)):
-						if filmstoignore[k] == films[j]:
-							if whotoignore[k] == 'all' or whotoignore[k] == sfactors[i]:
+						if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
+							if whotoignore[k] == 'xallx' or whotoignore[k] == sfactors[i]:
 								skipflag = 1
 				if skipflag == 0:
 					if ratings[j] == '0':
@@ -569,8 +569,8 @@ for i in range(len(finalactorsX)):
 				skipflag = 0
 				if ignorefilms == 1:
 					for k in range(len(filmstoignore)):
-						if filmstoignore[k] == films[j]:
-							if whotoignore[k] == 'all' or whotoignore[k] == finalactorsX[i]:
+						if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
+							if whotoignore[k] == 'xallx' or whotoignore[k] == finalactorsX[i]:
 								skipflag = 1
 				if skipflag == 0:
 					if ratings[j] == '0':
@@ -578,13 +578,13 @@ for i in range(len(finalactorsX)):
 					else:
 						print('** '+films[j])
 
-# Also keep all actors with at least 10 watched films and less than 9 rated films
+# Also keep all actors with at least 20 watched films and less than 9 rated films
 # Rank by number seen, then number rated:
 finalactors2 = []
 finalseen2 = []
 finalrated2 = []
 for i in range(len(sactors2)):
-	if sseen2[i] >= 10 and srated2[i] <= 8:
+	if sseen2[i] >= 20 and srated2[i] <= 8:
 		if len(finalactors2) > 0:
 			ratesortflag = 0
 			j = 0
@@ -721,8 +721,8 @@ for i in range(len(finalactors2)):
 				skipflag = 0
 				if ignorefilms == 1:
 					for k in range(len(filmstoignore)):
-						if filmstoignore[k] == films[j]:
-							if whotoignore[k] == 'all' or whotoignore[k] == finalactors2[i]:
+						if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
+							if whotoignore[k] == 'xallx' or whotoignore[k] == finalactors2[i]:
 								skipflag = 1
 				if skipflag == 0:
 					if ratings[j] == '0':
