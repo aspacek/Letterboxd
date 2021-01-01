@@ -9,9 +9,6 @@ import sys
 # csv module - read and write csv files
 import csv
 
-# numpy module - compute average and standard deviation
-import numpy as np
-
 import requests
 
 import time
