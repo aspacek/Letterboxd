@@ -746,7 +746,7 @@ if datapath2exists == 1:
 # Copy new temporary file to the save file:
 copyfile('Directors-league-data-'+user+'-other-temp-new.csv','Directors-league-data-'+user+'-other.csv')
 
-# Print most-watched director candidates, films
+# Print most-watched director candidates
 print('')
 print('******************************')
 print('** REWATCH RESULTS ***********')
