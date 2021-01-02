@@ -496,9 +496,9 @@ if datapath.exists():
 			newactorsflag = 0
 			j = 0
 			while newactorsflag == 0 and j < len(savedactors):
-				if finalactors[i] == savedactors[j]:
+				if sfactors_print[i] == savedactors[j]:
 					newactorsflag = 1
-					for k in range(sffilms_count):
+					for k in range(sffilms_count[i]):
 						film_match = 0
 						m = 0
 						while film_match == 0 and m < savedfilms_count[j]:
