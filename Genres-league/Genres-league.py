@@ -9,9 +9,6 @@ import sys
 # csv module - read and write csv files
 import csv
 
-# numpy module - compute average and standard deviation
-import numpy as np
-
 import requests
 
 import time
@@ -26,7 +23,7 @@ import os
 
 ##
 ## Written by Alex Spacek
-## November 2020 - December 2020
+## December 2020 - January 2020
 ##
 
 ##################################
@@ -225,21 +222,37 @@ for i in range(len(films)):
 	# Get the genres:
 	# Check on the number of genres:
 	genre_check = list(findstrings('/films/genre/',source))
+	# Check on the number of "genre" labels to ignore:
+	genre_ignore_check = list(findstrings('/films/genre/horror/by/rating/size/small',source))
+	# Number of valid genres:
+	genre_length = len(genre_check)-len(genre_ignore_check)
 	# If there are multiple genres:
-	if len(genre_check) > 1:
-		genres_temp = getstrings('all','/films/genre/','/',source)
+	if genre_length > 1:
+		genres_temp = getstrings('all','/films/genre/','/"',source)
 		for j in range(len(genres_temp)):
-			if j == 0:
-				genres = genres+[genres_temp[j]]
-			else:
-				extra_films = extra_films+[films[i]]
-				extra_ratings = extra_ratings+[ratings[i]]
-				extra_genres = extra_genres+[genres_temp[j]]
-				extra_years = extra_years+[years[i]]
-				extra_runtimes = extra_runtimes+[runtimes[i]]
+			if genres_temp[j] != 'horror/by/rating/size/small':
+				if j == 0:
+					genres = genres+[genres_temp[j]]
+				else:
+					extra_films = extra_films+[films[i]]
+					extra_ratings = extra_ratings+[ratings[i]]
+					extra_genres = extra_genres+[genres_temp[j]]
+					extra_years = extra_years+[years[i]]
+					extra_runtimes = extra_runtimes+[runtimes[i]]
 	# If there is one genre:
-	elif len(genre_check) == 1:
-		genres = genres+[getstrings('first','/films/genre/','/',source)]
+	elif genre_length == 1:
+		flag = 0
+		if len(genre_ignore_check) == 0:
+			flag = 1
+			genres = genres+[getstrings('first','/films/genre/','/"',source)]
+		else:
+			genres_temp = getstrings('all','/films/genre/','/"',source)
+			for j in range(len(genres_temp)):
+				if genres_temp[j] != 'horror/by/rating/size/small':
+					flag = flag+1
+					genres = genres+[genres_temp[j]]
+		if flag != 1:
+			sys.exit('ERROR - in main program - genre extraction (of one genre) encountered an error.')
 	# If there are no genres:
 	else:
 		genres = genres+['none']
@@ -368,81 +381,6 @@ for i in range(len(sgenres)):
 		ratingavg = ratingsum/ratingnum
 		finalavgratings = finalavgratings+[ratingavg]
 
-# Save the results to a temporary file:
-with open('Genres-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
-	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-	for i in range(len(finalgenres)):
-		csvwriter.writerow([finalgenres[i],finalavgratings[i],finalseen[i],finalrated[i]])
-
-# Check if saved file exists:
-datapath = Path('Genres-league-data-'+user+'.csv')
-datapathexists = 0
-if datapath.exists():
-	datapathexists = 1
-	print('')
-	print('******************************')
-	print('******************************')
-	# Read it in:
-	savedgenres = []
-	savedavgratings = []
-	savedseen = []
-	savedrated = []
-	with open('Genres-league-data-'+user+'.csv') as csv_file:
-		csv_reader = csv.reader(csv_file, delimiter=',')
-		for row in csv_reader:
-			savedgenres = savedgenres+[row[0]]
-			savedavgratings = savedavgratings+[float(row[1])]
-			savedseen = savedseen+[int(row[2])]
-			savedrated = savedrated+[int(row[3])]
-	# Check if the results are different:
-	differentflag = 0
-	if finalgenres != savedgenres:
-		differentflag = 1
-	elif finalavgratings != savedavgratings:
-		differentflag = 1
-	elif finalseen != savedseen:
-		differentflag = 1
-	elif finalrated != savedrated:
-		differentflag = 1
-	if differentflag == 1:
-		# Find out the differences and entries to be removed:
-		for i in range(len(savedgenres)):
-			removegenresflag = 0
-			j = 0
-			while removegenresflag == 0 and j < len(finalgenres):
-				if savedgenres[i] == finalgenres[j]:
-					removegenresflag = 1
-					if savedavgratings[i] != finalavgratings[j]:
-						print(savedgenres[i]+' - Avg Rating Changed To '+str(finalavgratings[j]/2))
-					if savedseen[i] != finalseen[j]:
-						print(savedgenres[i]+' - Num Seen Changed To '+str(finalseen[j]))
-					if savedrated[i] != finalrated[j]:
-						print(savedgenres[i]+' - Num Rated Changed To '+str(finalrated[j]))
-				j = j+1
-			if removegenresflag == 0:
-				print(savedgenres[i]+' - Genre Removed From List! (somehow)')
-		# Find out new entries to add:
-		for i in range(len(finalgenres)):
-			newgenresflag = 0
-			j = 0
-			while newgenresflag == 0 and j < len(savedgenres):
-				if finalgenres[i] == savedgenres[j]:
-					newgenresflag = 1
-				j = j+1
-			if newgenresflag == 0:
-				print(finalgenres[i]+' - New Genre To Add!')
-				print(' - Avg Rating = '+str(finalavgratings[i]/2))
-				print(' - Num Seen = '+str(finalseen[i]))
-				print(' - Num Rated = '+str(finalrated[i]))
-	else:
-		print('No Difference! Nothing New To Add!')
-
-# Copy old save file to a temporary file:
-if datapathexists == 1:
-	copyfile('Genres-league-data-'+user+'.csv','Genres-league-data-'+user+'-temp-old.csv')
-# Copy new temporary file to the save file:
-copyfile('Genres-league-data-'+user+'-temp-new.csv','Genres-league-data-'+user+'.csv')
-
 # Sort by average rating:
 finalavgratings_temp = [val for val in finalavgratings]
 finalgenres_temp = [val for val in finalgenres]
@@ -454,13 +392,16 @@ finalavgratings_temp = [val for val in finalavgratings]
 finalrated_temp = [val for val in finalrated]
 sfavgratings,sfrated = numsort(finalavgratings_temp,finalrated_temp,0,1)
 
-# Print final genres, films, and average ratings
-print('')
-print('******************************')
-print('******************************')
+# Get print details for final genres, films, and average ratings
+sfgenres_print = []
+sffilms_print = [[] for i in range(len(sfgenres))]
+sffilms_count = []
+sfavgratings_print = []
+sfseen_print = []
+sfrated_print = []
 for i in range(len(sfgenres)):
-	print('')
-	print(sfgenres[i])
+	sfgenres_print = sfgenres_print+[sfgenres[i]]
+	sffilms_count = sffilms_count+[0]
 	for j in range(len(films)):
 		if genres[j] == sfgenres[i]:
 			if runtimes[j] >= 40:
@@ -470,13 +411,144 @@ for i in range(len(sfgenres)):
 						if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
 							skipflag = 1
 				if skipflag == 0:
+					sffilms_count[i] = sffilms_count[i]+1
 					if ratings[j] == '0':
-						print('   '+films[j])
+						sffilms_print[i] = sffilms_print[i]+['   '+films[j]]
 					else:
-						print('** '+films[j])
-	print('Avg rating = '+str(sfavgratings[i]/2))
-	print('Number seen = '+str(sfseen[i]))
-	print('Number rated = '+str(sfrated[i]))
+						sffilms_print[i] = sffilms_print[i]+['** '+films[j]]
+	sfavgratings_print = sfavgratings_print+[str(sfavgratings[i]/2)]
+	sfseen_print = sfseen_print+[str(sfseen[i])]
+	sfrated_print = sfrated_print+[str(sfrated[i])]
+
+# Save the results to a temporary file:
+with open('Genres-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
+	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+	for i in range(len(sfgenres_print)):
+		csvwriter.writerow([sfgenres_print[i],sffilms_count[i],sfavgratings_print[i],sfseen_print[i],sfrated_print[i]])
+		for j in range(sffilms_count[i]):
+			csvwriter.writerow([sffilms_print[i][j]])
+
+# Check if saved file exists:
+datapath = Path('Genres-league-data-'+user+'.csv')
+datapathexists = 0
+if datapath.exists():
+	datapathexists = 1
+	print('')
+	print('******************************')
+	print('** LEAGUE RESULTS CHANGES ****')
+	print('******************************')
+	# Read it in:
+	savedgenres = []
+	savedfilms_count = []
+	savedfilms = []
+	savedavgratings = []
+	savedseen = []
+	savedrated = []
+	with open('Genres-league-data-'+user+'.csv') as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=',')
+		count = 0
+		flag = 0
+		i = -1
+		for row in csv_reader:
+			if count == 0:
+				savedgenres = savedgenres+[row[0]]
+				savedfilms_count = savedfilms_count+[int(row[1])]
+				savedavgratings = savedavgratings+[row[2]]
+				savedseen = savedseen+[row[3]]
+				savedrated = savedrated+[row[4]]
+				i = i+1
+				count = savedfilms_count[i]
+				flag = 1
+			else:
+				if flag == 1:
+					flag = 0
+					savedfilms = savedfilms+[[row[0]]]
+					count = count-1
+				else:
+					savedfilms[i] = savedfilms[i]+[row[0]]
+					count = count-1
+	# Check if the results are different:
+	differentflag = 0
+	if sfgenres_print != savedgenres:
+		differentflag = 1
+	elif sfavgratings_print != savedavgratings:
+		differentflag = 1
+	elif sfseen_print != savedseen:
+		differentflag = 1
+	elif sfrated_print != savedrated:
+		differentflag = 1
+	elif sffilms_count != savedfilms_count:
+		differentflag = 1
+	elif sffilms_print != savedfilms:
+		differentflag = 1
+	if differentflag == 1:
+		# Find out the differences and entries to be removed:
+		for i in range(len(savedgenres)):
+			removegenresflag = 0
+			j = 0
+			while removegenresflag == 0 and j < len(sfgenres_print):
+				if savedgenres[i] == sfgenres_print[j]:
+					removegenresflag = 1
+					if savedavgratings[i] != sfavgratings_print[j]:
+						print(savedgenres[i]+' - Avg Rating Changed To '+sfavgratings_print[j])
+					if savedseen[i] != sfseen_print[j]:
+						print(savedgenres[i]+' - Num Seen Changed To '+sfseen_print[j])
+					if savedrated[i] != sfrated_print[j]:
+						print(savedgenres[i]+' - Num Rated Changed To '+sfrated_print[j])
+					for k in range(savedfilms_count[i]):
+						film_match = 0
+						m = 0
+						while film_match == 0 and m < sffilms_count[j]:
+							if savedfilms[i][k] == sffilms_print[j][m]:
+								film_match = 1
+							m = m+1
+						if film_match == 0:
+							print(savedgenres[i]+' - Film Removed From List Or Changed - '+savedfilms[i][k])
+				j = j+1
+			if removegenresflag == 0:
+				print(savedgenres[i]+' - Genre Removed From List! (somehow)')
+		# Find out new entries to add:
+		for i in range(len(sfgenres_print)):
+			newgenresflag = 0
+			j = 0
+			while newgenresflag == 0 and j < len(savedgenres):
+				if sfgenres_print[i] == savedgenres[j]:
+					newgenresflag = 1
+					for k in range(sffilms_count[i]):
+						film_match = 0
+						m = 0
+						while film_match == 0 and m < savedfilms_count[j]:
+							if sffilms_print[i][k] == savedfilms[j][m]:
+								film_match = 1
+							m = m+1
+						if film_match == 0:
+							print(sfgenres_print[i]+' - New film added - '+sffilms_print[i][k])
+				j = j+1
+			if newgenresflag == 0:
+				print(sfgenres_print[i]+' - New Genre To Add!')
+				print(' - Avg Rating = '+sfavgratings_print[i])
+				print(' - Num Seen = '+sfseen_print[i])
+				print(' - Num Rated = '+sfrated_print[i])
+	else:
+		print('No Difference! Nothing New To Add!')
+
+# Print out limited results:
+print('')
+print('******************************')
+print('** LEAGUE RESULTS ************')
+print('******************************')
+for i in range(len(sfgenres_print)):
+	print('')
+	print(sfgenres_print[i])
+	print('Avg rating = '+sfavgratings_print[i])
+	print('Number seen = '+sfseen_print[i])
+	print('Number rated = '+sfrated_print[i])
+
+# Copy old save file to a temporary file:
+if datapathexists == 1:
+	copyfile('Genres-league-data-'+user+'.csv','Genres-league-data-'+user+'-temp-old.csv')
+# Copy new temporary file to the save file:
+copyfile('Genres-league-data-'+user+'-temp-new.csv','Genres-league-data-'+user+'.csv')
 
 # Also keep all genres with 19 rated films:
 finalgenresX = []
@@ -501,6 +573,7 @@ if datapathX.exists():
 	datapathXexists = 1
 	print('')
 	print('******************************')
+	print('** ALMOST RESULTS CHANGES ****')
 	print('******************************')
 	# Read it in:
 	savedgenresX = []
@@ -556,28 +629,16 @@ if datapathXexists == 1:
 # Copy new temporary file to the save file:
 copyfile('Genres-league-data-'+user+'-X-temp-new.csv','Genres-league-data-'+user+'-X.csv')
 
-# Print 19-rated genre candidates, films
+# Print 19-rated genre candidates
 print('')
 print('******************************')
+print('** ALMOST RESULTS ************')
 print('******************************')
 for i in range(len(finalgenresX)):
 	print('')
 	print(finalgenresX[i])
 	print('Number seen = '+str(finalseenX[i]))
 	print('Number rated = '+str(finalratedX[i]))
-	for j in range(len(films)):
-		if genres[j] == finalgenresX[i]:
-			if runtimes[j] >= 40:
-				skipflag = 0
-				if ignorefilms == 1:
-					for k in range(len(filmstoignore)):
-						if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
-							skipflag = 1
-				if skipflag == 0:
-					if ratings[j] == '0':
-						print('   '+films[j])
-					else:
-						print('** '+films[j])
 
 # Also keep all genres with at least 20 watched films and less than 19 rated films
 # Rank by number seen, then number rated:
@@ -652,6 +713,7 @@ if datapath2.exists():
 	datapath2exists = 1
 	print('')
 	print('******************************')
+	print('** REWATCH RESULTS CHANGES ***')
 	print('******************************')
 	# Read it in:
 	savedgenres2 = []
@@ -707,28 +769,16 @@ if datapath2exists == 1:
 # Copy new temporary file to the save file:
 copyfile('Genres-league-data-'+user+'-other-temp-new.csv','Genres-league-data-'+user+'-other.csv')
 
-# Print most-watched genre candidates, films
+# Print most-watched genre candidates
 print('')
 print('******************************')
+print('** REWATCH RESULTS ***********')
 print('******************************')
 for i in range(len(finalgenres2)):
 	print('')
 	print(finalgenres2[i])
 	print('Number seen = '+str(finalseen2[i]))
 	print('Number rated = '+str(finalrated2[i]))
-	for j in range(len(films)):
-		if genres[j] == finalgenres2[i]:
-			if runtimes[j] >= 40:
-				skipflag = 0
-				if ignorefilms == 1:
-					for k in range(len(filmstoignore)):
-						if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
-							skipflag = 1
-				if skipflag == 0:
-					if ratings[j] == '0':
-						print('   '+films[j])
-					else:
-						print('** '+films[j])
 
 # Also show the rest of the genres
 # Rank by number seen, then number rated:
@@ -803,6 +853,7 @@ if datapath3.exists():
 	datapath3exists = 1
 	print('')
 	print('******************************')
+	print('** THE REST RESULTS CHANGES **')
 	print('******************************')
 	# Read it in:
 	savedgenres3 = []
@@ -858,9 +909,80 @@ if datapath3exists == 1:
 # Copy new temporary file to the save file:
 copyfile('Genres-league-data-'+user+'-other2-temp-new.csv','Genres-league-data-'+user+'-other2.csv')
 
-# Print most-watched genre candidates, films
+# Print the rest of the genre candidates
 print('')
 print('******************************')
+print('** THE REST RESULTS **********')
+print('******************************')
+for i in range(len(finalgenres3)):
+	print('')
+	print(finalgenres3[i])
+	print('Number seen = '+str(finalseen3[i]))
+	print('Number rated = '+str(finalrated3[i]))
+
+# Print out full results for everything:
+print('')
+print('******************************')
+print('** FULL LEAGUE RESULTS *******')
+print('******************************')
+for i in range(len(sfgenres_print)):
+	print('')
+	print(sfgenres_print[i])
+	for j in range(sffilms_count[i]):
+		print(sffilms_print[i][j])
+	print('Avg rating = '+sfavgratings_print[i])
+	print('Number seen = '+sfseen_print[i])
+	print('Number rated = '+sfrated_print[i])
+
+print('')
+print('******************************')
+print('** FULL ALMOST RESULTS *******')
+print('******************************')
+for i in range(len(finalgenresX)):
+	print('')
+	print(finalgenresX[i])
+	print('Number seen = '+str(finalseenX[i]))
+	print('Number rated = '+str(finalratedX[i]))
+	for j in range(len(films)):
+		if genres[j] == finalgenresX[i]:
+			if runtimes[j] >= 40:
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
+							skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
+
+print('')
+print('******************************')
+print('** FULL REWATCH RESULTS ******')
+print('******************************')
+for i in range(len(finalgenres2)):
+	print('')
+	print(finalgenres2[i])
+	print('Number seen = '+str(finalseen2[i]))
+	print('Number rated = '+str(finalrated2[i]))
+	for j in range(len(films)):
+		if genres[j] == finalgenres2[i]:
+			if runtimes[j] >= 40:
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == 'xallx' or filmstoignore[k] == films[j]:
+							skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
+
+print('')
+print('******************************')
+print('** FULL THE REST RESULTS *****')
 print('******************************')
 for i in range(len(finalgenres3)):
 	print('')
