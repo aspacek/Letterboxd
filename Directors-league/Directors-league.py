@@ -410,6 +410,7 @@ if datapath.exists():
 	datapathexists = 1
 	print('')
 	print('******************************')
+	print('** LEAGUE RESULTS CHANGES ****')
 	print('******************************')
 	# Read it in:
 	saveddirectors = []
@@ -509,15 +510,16 @@ if datapath.exists():
 # Print out results:
 print('')
 print('******************************')
+print('** FULL LEAGUE RESULTS *******')
 print('******************************')
 for i in range(len(sfdirectors_print)):
 	print('')
 	print(sfdirectors_print[i])
-	for j in range(sffilms_count[i]):
-		print(sffilms_print[i][j])
 	print('Avg rating = '+sfavgratings_print[i])
 	print('Number seen = '+sfseen_print[i])
 	print('Number rated = '+sfrated_print[i])
+	for j in range(sffilms_count[i]):
+		print(sffilms_print[i][j])
 
 # Copy old save file to a temporary file:
 if datapathexists == 1:
@@ -548,6 +550,7 @@ if datapathX.exists():
 	datapathXexists = 1
 	print('')
 	print('******************************')
+	print('** ALMOST RESULTS CHANGES ****')
 	print('******************************')
 	# Read it in:
 	saveddirectorsX = []
@@ -603,29 +606,16 @@ if datapathXexists == 1:
 # Copy new temporary file to the save file:
 copyfile('Directors-league-data-'+user+'-X-temp-new.csv','Directors-league-data-'+user+'-X.csv')
 
-# Print 4-rated director candidates, films
+# Print 4-rated director candidates
 print('')
 print('******************************')
+print('** ALMOST RESULTS ************')
 print('******************************')
 for i in range(len(finaldirectorsX)):
 	print('')
 	print(finaldirectorsX[i])
 	print('Number seen = '+str(finalseenX[i]))
 	print('Number rated = '+str(finalratedX[i]))
-	for j in range(len(films)):
-		if directors[j] == finaldirectorsX[i]:
-			if runtimes[j] >= 40:
-				skipflag = 0
-				if ignorefilms == 1:
-					for k in range(len(filmstoignore)):
-						if filmstoignore[k] == films[j]:
-							if whotoignore[k] == 'all' or whotoignore[k] == finaldirectorsX[i]:
-								skipflag = 1
-				if skipflag == 0:
-					if ratings[j] == '0':
-						print('   '+films[j])
-					else:
-						print('** '+films[j])
 
 # Also keep all directors with at least 5 watched films and less than 4 rated films
 # Rank by number seen, then number rated:
@@ -700,6 +690,7 @@ if datapath2.exists():
 	datapath2exists = 1
 	print('')
 	print('******************************')
+	print('** REWATCH RESULTS CHANGES ***')
 	print('******************************')
 	# Read it in:
 	saveddirectors2 = []
@@ -758,6 +749,42 @@ copyfile('Directors-league-data-'+user+'-other-temp-new.csv','Directors-league-d
 # Print most-watched director candidates, films
 print('')
 print('******************************')
+print('** REWATCH RESULTS ***********')
+print('******************************')
+for i in range(len(finaldirectors2)):
+	print('')
+	print(finaldirectors2[i])
+	print('Number seen = '+str(finalseen2[i]))
+	print('Number rated = '+str(finalrated2[i]))
+
+# Print full "almost" and "rewatch" results:
+print('')
+print('******************************')
+print('** FULL ALMOST RESULTS *******')
+print('******************************')
+for i in range(len(finaldirectorsX)):
+	print('')
+	print(finaldirectorsX[i])
+	print('Number seen = '+str(finalseenX[i]))
+	print('Number rated = '+str(finalratedX[i]))
+	for j in range(len(films)):
+		if directors[j] == finaldirectorsX[i]:
+			if runtimes[j] >= 40:
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == films[j]:
+							if whotoignore[k] == 'all' or whotoignore[k] == finaldirectorsX[i]:
+								skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					else:
+						print('** '+films[j])
+
+print('')
+print('******************************')
+print('** FULL REWATCH RESULTS ******')
 print('******************************')
 for i in range(len(finaldirectors2)):
 	print('')
