@@ -509,7 +509,7 @@ if datapath.exists():
 							print(sfactors_print[i]+' - New film added - '+sffilms_print[i][k])
 				j = j+1
 			if newactorsflag == 0:
-				print(finalactors[i]+' - New Actor To Add!')
+				print(sfactors_print[i]+' - New Actor To Add!')
 				print(' - Avg Rating = '+sfavgratings_print[i])
 				print(' - Num Seen = '+sfseen_print[i])
 				print(' - Num Rated = '+sfrated_print[i])
