@@ -510,9 +510,9 @@ if datapath.exists():
 print('')
 print('******************************')
 print('******************************')
-for i in range(len(sfdirectors)):
+for i in range(len(sfdirectors_print)):
 	print('')
-	print(sfdirectors[i])
+	print(sfdirectors_print[i])
 	for j in range(sffilms_count[i]):
 		print(sffilms_print[i][j])
 	print('Avg rating = '+sfavgratings_print[i])
