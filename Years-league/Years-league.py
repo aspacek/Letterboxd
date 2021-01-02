@@ -9,9 +9,6 @@ import sys
 # csv module - read and write csv files
 import csv
 
-# numpy module - compute average and standard deviation
-import numpy as np
-
 import requests
 
 import time
@@ -26,7 +23,7 @@ import os
 
 ##
 ## Written by Alex Spacek
-## December 2020
+## December 2020 - January 2020
 ##
 
 ##################################
@@ -376,6 +373,7 @@ if datapath.exists():
 	datapathexists = 1
 	print('')
 	print('******************************')
+	print('** LEAGUE RESULTS CHANGES ****')
 	print('******************************')
 	# Read it in:
 	savedyears = []
@@ -475,12 +473,11 @@ if datapath.exists():
 # Print out results:
 print('')
 print('******************************')
+print('** LEAGUE RESULTS ************')
 print('******************************')
 for i in range(len(sfyears_print)):
 	print('')
 	print(sfyears_print[i])
-	for j in range(sffilms_count[i]):
-		print(sffilms_print[i][j])
 	print('Avg rating = '+sfavgratings_print[i])
 	print('Number seen = '+sfseen_print[i])
 	print('Number rated = '+sfrated_print[i])
@@ -514,6 +511,7 @@ if datapathX.exists():
 	datapathXexists = 1
 	print('')
 	print('******************************')
+	print('** ALMOST RESULTS CHANGES ****')
 	print('******************************')
 	# Read it in:
 	savedyearsX = []
@@ -569,30 +567,16 @@ if datapathXexists == 1:
 # Copy new temporary file to the save file:
 copyfile('Years-league-data-'+user+'-X-temp-new.csv','Years-league-data-'+user+'-X.csv')
 
-# Print 9-rated year candidates, films
+# Print 9-rated year candidates
 print('')
 print('******************************')
+print('** ALMOST RESULTS ************')
 print('******************************')
 for i in range(len(finalyearsX)):
 	print('')
 	print(finalyearsX[i])
 	print('Number seen = '+str(finalseenX[i]))
 	print('Number rated = '+str(finalratedX[i]))
-	for j in range(len(films)):
-		if years[j] == finalyearsX[i]:
-			if runtimes[j] >= 40:
-				skipflag = 0
-				if ignorefilms == 1:
-					for k in range(len(filmstoignore)):
-						if filmstoignore[k] == films[j]:
-							skipflag = 1
-				if skipflag == 0:
-					if ratings[j] == '0':
-						print('   '+films[j])
-					elif int(ratings[j]) < 6:
-						print('-- '+films[j])
-					else:
-						print('** '+films[j])
 
 # Also keep all years with at least 10 watched films and less than 9 rated films
 # Rank by number seen, then number rated:
@@ -667,6 +651,7 @@ if datapath2.exists():
 	datapath2exists = 1
 	print('')
 	print('******************************')
+	print('** REWATCH RESULTS CHANGES ***')
 	print('******************************')
 	# Read it in:
 	savedyears2 = []
@@ -722,9 +707,59 @@ if datapath2exists == 1:
 # Copy new temporary file to the save file:
 copyfile('Years-league-data-'+user+'-other-temp-new.csv','Years-league-data-'+user+'-other.csv')
 
-# Print most-watched year candidates, films
+# Print most-watched year candidates
 print('')
 print('******************************')
+print('** REWATCH RESULTS ***********')
+print('******************************')
+for i in range(len(finalyears2)):
+	print('')
+	print(finalyears2[i])
+	print('Number seen = '+str(finalseen2[i]))
+	print('Number rated = '+str(finalrated2[i]))
+
+# Print out full results for everything:
+print('')
+print('******************************')
+print('** FULL LEAGUE RESULTS *******')
+print('******************************')
+for i in range(len(sfyears_print)):
+	print('')
+	print(sfyears_print[i])
+	for j in range(sffilms_count[i]):
+		print(sffilms_print[i][j])
+	print('Avg rating = '+sfavgratings_print[i])
+	print('Number seen = '+sfseen_print[i])
+	print('Number rated = '+sfrated_print[i])
+
+print('')
+print('******************************')
+print('** FULL ALMOST RESULTS *******')
+print('******************************')
+for i in range(len(finalyearsX)):
+	print('')
+	print(finalyearsX[i])
+	print('Number seen = '+str(finalseenX[i]))
+	print('Number rated = '+str(finalratedX[i]))
+	for j in range(len(films)):
+		if years[j] == finalyearsX[i]:
+			if runtimes[j] >= 40:
+				skipflag = 0
+				if ignorefilms == 1:
+					for k in range(len(filmstoignore)):
+						if filmstoignore[k] == films[j]:
+							skipflag = 1
+				if skipflag == 0:
+					if ratings[j] == '0':
+						print('   '+films[j])
+					elif int(ratings[j]) < 6:
+						print('-- '+films[j])
+					else:
+						print('** '+films[j])
+
+print('')
+print('******************************')
+print('** FULL REWATCH RESULTS ******')
 print('******************************')
 for i in range(len(finalyears2)):
 	print('')

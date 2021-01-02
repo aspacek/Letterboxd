@@ -517,7 +517,7 @@ if datapath.exists():
 # Print out results:
 print('')
 print('******************************')
-print('** LEAGUE RESULTS ************')
+print('** FULL LEAGUE RESULTS *******')
 print('******************************')
 for i in range(len(sfactors_print)):
 	print('')
@@ -767,6 +767,7 @@ for i in range(len(finalactors2)):
 # Print full "almost" and "rewatch" results:
 print('')
 print('******************************')
+print('** FULL ALMOST RESULTS *******')
 print('******************************')
 for i in range(len(finalactorsX)):
 	print('')
@@ -790,6 +791,7 @@ for i in range(len(finalactorsX)):
 
 print('')
 print('******************************')
+print('** FULL REWATCH RESULTS ******')
 print('******************************')
 for i in range(len(finalactors2)):
 	print('')
