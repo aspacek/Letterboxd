@@ -9,9 +9,6 @@ import sys
 # csv module - read and write csv files
 import csv
 
-# numpy module - compute average and standard deviation
-import numpy as np
-
 import requests
 
 import time
@@ -26,7 +23,7 @@ import os
 
 ##
 ## Written by Alex Spacek
-## November 2020 - December 2020
+## November 2020 - January 2020
 ##
 
 ##################################

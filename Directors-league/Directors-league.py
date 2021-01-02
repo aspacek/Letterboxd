@@ -23,7 +23,7 @@ import os
 
 ##
 ## Written by Alex Spacek
-## November 2020 - December 2020
+## November 2020 - January 2020
 ##
 
 ##################################
