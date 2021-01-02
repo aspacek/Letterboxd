@@ -417,8 +417,22 @@ if datapath.exists():
 		differentflag = 1
 	elif sffilms_count != savedfilms_count:
 		differentflag = 1
-	elif sffilms_print != savedfilms:
+	elif len(sffilms_print) != len(savedfilms):
 		differentflag = 1
+	else:
+		for i in range(len(sffilms_print)):
+			if len(sffilms_print[i]) != len(savedfilms[i]):
+				differentflag = 1
+			else:
+				for j in range(sffilms_count[i]):
+					film_in_both = 0
+					k = 0
+					while film_in_both == 0 and k < savedfilms_count[i]:
+						if sffilms_print[i][j] == savedfilms[i][k]:
+							film_in_both = 1
+						k = k+1
+					if film_in_both == 0:
+						differentflag = 1
 	if differentflag == 1:
 		# Find out the differences and entries to be removed:
 		for i in range(len(savedyears)):
