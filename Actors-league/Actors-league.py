@@ -365,81 +365,6 @@ for i in range(len(sactors)):
 		ratingavg = ratingsum/ratingnum
 		finalavgratings = finalavgratings+[ratingavg]
 
-# Save the results to a temporary file:
-with open('Actors-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
-	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-	for i in range(len(finalactors)):
-		csvwriter.writerow([finalactors[i],finalavgratings[i],finalseen[i],finalrated[i]])
-
-# Check if saved file exists:
-datapath = Path('Actors-league-data-'+user+'.csv')
-datapathexists = 0
-if datapath.exists():
-	datapathexists = 1
-	print('')
-	print('******************************')
-	print('******************************')
-	# Read it in:
-	savedactors = []
-	savedavgratings = []
-	savedseen = []
-	savedrated = []
-	with open('Actors-league-data-'+user+'.csv') as csv_file:
-		csv_reader = csv.reader(csv_file, delimiter=',')
-		for row in csv_reader:
-			savedactors = savedactors+[row[0]]
-			savedavgratings = savedavgratings+[float(row[1])]
-			savedseen = savedseen+[int(row[2])]
-			savedrated = savedrated+[int(row[3])]
-	# Check if the results are different:
-	differentflag = 0
-	if finalactors != savedactors:
-		differentflag = 1
-	elif finalavgratings != savedavgratings:
-		differentflag = 1
-	elif finalseen != savedseen:
-		differentflag = 1
-	elif finalrated != savedrated:
-		differentflag = 1
-	if differentflag == 1:
-		# Find out the differences and entries to be removed:
-		for i in range(len(savedactors)):
-			removeactorsflag = 0
-			j = 0
-			while removeactorsflag == 0 and j < len(finalactors):
-				if savedactors[i] == finalactors[j]:
-					removeactorsflag = 1
-					if savedavgratings[i] != finalavgratings[j]:
-						print(savedactors[i]+' - Avg Rating Changed To '+str(finalavgratings[j]/2))
-					if savedseen[i] != finalseen[j]:
-						print(savedactors[i]+' - Num Seen Changed To '+str(finalseen[j]))
-					if savedrated[i] != finalrated[j]:
-						print(savedactors[i]+' - Num Rated Changed To '+str(finalrated[j]))
-				j = j+1
-			if removeactorsflag == 0:
-				print(savedactors[i]+' - Actor Removed From List! (somehow)')
-		# Find out new entries to add:
-		for i in range(len(finalactors)):
-			newactorsflag = 0
-			j = 0
-			while newactorsflag == 0 and j < len(savedactors):
-				if finalactors[i] == savedactors[j]:
-					newactorsflag = 1
-				j = j+1
-			if newactorsflag == 0:
-				print(finalactors[i]+' - New Actor To Add!')
-				print(' - Avg Rating = '+str(finalavgratings[i]/2))
-				print(' - Num Seen = '+str(finalseen[i]))
-				print(' - Num Rated = '+str(finalrated[i]))
-	else:
-		print('No Difference! Nothing New To Add!')
-
-# Copy old save file to a temporary file:
-if datapathexists == 1:
-	copyfile('Actors-league-data-'+user+'.csv','Actors-league-data-'+user+'-temp-old.csv')
-# Copy new temporary file to the save file:
-copyfile('Actors-league-data-'+user+'-temp-new.csv','Actors-league-data-'+user+'.csv')
-
 # Sort by average rating:
 finalavgratings_temp = [val for val in finalavgratings]
 finalactors_temp = [val for val in finalactors]
@@ -451,13 +376,16 @@ finalavgratings_temp = [val for val in finalavgratings]
 finalrated_temp = [val for val in finalrated]
 sfavgratings,sfrated = numsort(finalavgratings_temp,finalrated_temp,0,1)
 
-# Print final actors, films, and average ratings
-print('')
-print('******************************')
-print('******************************')
+# Get print details for final actors, films, and average ratings
+sfactors_print = []
+sffilms_print = [[] for i in range(len(sfactors))]
+sffilms_count = []
+sfavgratings_print = []
+sfseen_print = []
+sfrated_print = []
 for i in range(len(sfactors)):
-	print('')
-	print(sfactors[i])
+	sfactors_print = sfactors_print+[sfactors[i]]
+	sffilms_count = sffilms_count+[0]
 	for j in range(len(films)):
 		if actors[j] == sfactors[i]:
 			if runtimes[j] >= 40:
@@ -468,13 +396,144 @@ for i in range(len(sfactors)):
 							if whotoignore[k] == 'xallx' or whotoignore[k] == sfactors[i]:
 								skipflag = 1
 				if skipflag == 0:
+					sffilms_count[i] = sffilms_count[i]+1
 					if ratings[j] == '0':
-						print('   '+films[j])
+						sffilms_print[i] = sffilms_print[i]+['   '+films[j]]
 					else:
-						print('** '+films[j])
-	print('Avg rating = '+str(sfavgratings[i]/2))
-	print('Number seen = '+str(sfseen[i]))
-	print('Number rated = '+str(sfrated[i]))
+						sffilms_print[i] = sffilms_print[i]+['** '+films[j]]
+	sfavgratings_print = sfavgratings_print+[str(sfavgratings[i]/2)]
+	sfseen_print = sfseen_print+[str(sfseen[i])]
+	sfrated_print = sfrated_print+[str(sfrated[i])]
+
+# Save the results to a temporary file:
+with open('Actors-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
+	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+	for i in range(len(sfactors_print)):
+		csvwriter.writerow([sfactors_print[i],sffilms_count[i],sfavgratings_print[i],sfseen_print[i],sfrated_print[i]])
+		for j in range(sffilms_count[i]):
+			csvwriter.writerow([sffilms_print[i][j]])
+
+# Check if saved file exists:
+datapath = Path('Actors-league-data-'+user+'.csv')
+datapathexists = 0
+if datapath.exists():
+	datapathexists = 1
+	print('')
+	print('******************************')
+	print('******************************')
+	# Read it in:
+	savedactors = []
+	savedfilms_count = []
+	savedfilms = []
+	savedavgratings = []
+	savedseen = []
+	savedrated = []
+	with open('Actors-league-data-'+user+'.csv') as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=',')
+		count = 0
+		flag = 0
+		i = -1
+		for row in csv_reader:
+			if count == 0:
+				savedactors = savedactors+[row[0]]
+				savedfilms_count = savedfilms_count+[int(row[1])]
+				savedavgratings = savedavgratings+[row[2]]
+				savedseen = savedseen+[row[3]]
+				savedrated = savedrated+[row[4]]
+				i = i+1
+				count = savedfilms_count[i]
+				flag = 1
+			else:
+				if flag == 1:
+					flag = 0
+					savedfilms = savedfilms+[[row[0]]]
+					count = count-1
+				else:
+					savedfilms[i] = savedfilms[i]+[row[0]]
+					count = count-1
+	# Check if the results are different:
+	differentflag = 0
+	if sfactors_print != savedactors:
+		differentflag = 1
+	elif sfavgratings_print != savedavgratings:
+		differentflag = 1
+	elif sfseen_print != savedseen:
+		differentflag = 1
+	elif sfrated_print != savedrated:
+		differentflag = 1
+	elif sffilms_count != savedfilms_count:
+		differentflag = 1
+	elif sffilms_print != savedfilms:
+		differentflag = 1
+	if differentflag == 1:
+		# Find out the differences and entries to be removed:
+		for i in range(len(savedactors)):
+			removeactorsflag = 0
+			j = 0
+			while removeactorsflag == 0 and j < len(sfactors_print):
+				if savedactors[i] == sfactors_print[j]:
+					removeactorsflag = 1
+					if savedavgratings[i] != sfavgratings_print[j]:
+						print(savedactors[i]+' - Avg Rating Changed To '+sfavgratings_print[j])
+					if savedseen[i] != sfseen_print[j]:
+						print(savedactors[i]+' - Num Seen Changed To '+sfseen_print[j])
+					if savedrated[i] != sfrated_print[j]:
+						print(savedactors[i]+' - Num Rated Changed To '+sfrated_print[j])
+					for k in range(savedfilms_count[i]):
+						film_match = 0
+						m = 0
+						while film_match == 0 and m < sffilms_count[j]:
+							if savedfilms[i][k] == sffilms_print[j][m]:
+								film_match = 1
+							m = m+1
+						if film_match == 0:
+							print(savedactors[i]+' - Film Removed From List Or Changed - '+savedfilms[i][k])
+				j = j+1
+			if removeactorsflag == 0:
+				print(savedactors[i]+' - Actor Removed From List! (somehow)')
+		# Find out new entries to add:
+		for i in range(len(sfactors_print)):
+			newactorsflag = 0
+			j = 0
+			while newactorsflag == 0 and j < len(savedactors):
+				if finalactors[i] == savedactors[j]:
+					newactorsflag = 1
+					for k in range(sffilms_count):
+						film_match = 0
+						m = 0
+						while film_match == 0 and m < savedfilms_count[j]:
+							if sffilms_print[i][k] == savedfilms[j][m]:
+								film_match = 1
+							m = m+1
+						if film_match == 0:
+							print(sfactors_print[i]+' - New film added - '+sffilms_print[i][k])
+				j = j+1
+			if newactorsflag == 0:
+				print(finalactors[i]+' - New Actor To Add!')
+				print(' - Avg Rating = '+sfavgratings_print[i])
+				print(' - Num Seen = '+sfseen_print[i])
+				print(' - Num Rated = '+sfrated_print[i])
+	else:
+		print('No Difference! Nothing New To Add!')
+
+# Print out results:
+print('')
+print('******************************')
+print('******************************')
+for i in range(len(sfactors_print)):
+	print('')
+	print(sfactors_print[i])
+	for j in range(sffilms_count[i]):
+		print(sffilms_print[i][j])
+	print('Avg rating = '+sfavgratings_print[i])
+	print('Number seen = '+sfseen_print[i])
+	print('Number rated = '+sfrated_print[i])
+
+# Copy old save file to a temporary file:
+if datapathexists == 1:
+	copyfile('Actors-league-data-'+user+'.csv','Actors-league-data-'+user+'-temp-old.csv')
+# Copy new temporary file to the save file:
+copyfile('Actors-league-data-'+user+'-temp-new.csv','Actors-league-data-'+user+'.csv')
 
 # Also keep all actors with 9 rated films:
 finalactorsX = []

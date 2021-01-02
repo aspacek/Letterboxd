@@ -34,6 +34,8 @@ david-blaine-real-or-magic,xallx
 david-cross-let-america-laugh,xallx
 david-cross-making-america-great-again,xallx
 dear-mr-watterson,xallx
+death-to-2020,xallx
+diana-in-her-own-words,xallx
 dont-think-twice,Ben Stiller
 fahrenheit-9-11,xallx
 family-guy-presents-its-a-trap,Anne Hathaway
@@ -69,9 +71,11 @@ marc-maron-thinky-pain,xallx
 monty-python-almost-the-truth-the-lawyers-cut,xallx
 mulan,Jeff Bennett
 the-muppets,Jack Black
+no-direction-home-bob-dylan,xallx
 oh-hello-on-broadway,Steve Martin
 pocahontas,Frank Welker
 the-prince-of-egypt,Aria Noelle Curzon
+remastered-tricky-dick-the-man-in-black,xallx
 the-return-of-jafar,Jeff Bennett
 rihie-rih,Frank Welker
 the-santa-clause,Frank Welker
