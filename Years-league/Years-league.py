@@ -452,9 +452,9 @@ if datapath.exists():
 			newyearflag = 0
 			j = 0
 			while newyearflag == 0 and j < len(savedyears):
-				if finalyears[i] == savedyears[j]:
+				if sfyears_print[i] == savedyears[j]:
 					newyearflag = 1
-					for k in range(sffilms_count):
+					for k in range(sffilms_count[i]):
 						film_match = 0
 						m = 0
 						while film_match == 0 and m < savedfilms_count[j]:
