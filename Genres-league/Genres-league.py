@@ -120,6 +120,8 @@ def numsort(arraytosort,arraytomatch,isstring,highestfirst):
 ############################################################################
 
 # Ask for username:
+print('\nNote: Letterboxd username needs to match how it appears in the profile URL.')
+print('      i.e. letterboxd.com/<username>/')
 user = input('\nEnter Letterboxd username: ')
 
 # Save backups of all output files in case something goes wrong:
