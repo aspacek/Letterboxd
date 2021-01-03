@@ -123,21 +123,21 @@ def numsort(arraytosort,arraytomatch,isstring,highestfirst):
 user = input('\nEnter Letterboxd username: ')
 
 # Save backups of all output files in case something goes wrong:
-outputpath1 = Path('Years-league-data-'+user+'.csv')
-outputpath2 = Path('Years-league-data-'+user+'-X.csv')
-outputpath3 = Path('Years-league-data-'+user+'-other.csv')
+outputpath1 = Path('Saved-data-files/Years-league-data-'+user+'.csv')
+outputpath2 = Path('Saved-data-files/Years-league-data-'+user+'-X.csv')
+outputpath3 = Path('Saved-data-files/Years-league-data-'+user+'-other.csv')
 outputpath1exists = 0
 outputpath2exists = 0
 outputpath3exists = 0
 if outputpath1.exists():
 	outputpath1exists = 1
-	copyfile('Years-league-data-'+user+'.csv','Years-league-data-'+user+'-saved.csv')
+	copyfile('Saved-data-files/Years-league-data-'+user+'.csv','Saved-data-files/Years-league-data-'+user+'-saved.csv')
 if outputpath2.exists():
 	outputpath2exists = 1
-	copyfile('Years-league-data-'+user+'-X.csv','Years-league-data-'+user+'-X-saved.csv')
+	copyfile('Saved-data-files/Years-league-data-'+user+'-X.csv','Saved-data-files/Years-league-data-'+user+'-X-saved.csv')
 if outputpath3.exists():
 	outputpath3exists = 1
-	copyfile('Years-league-data-'+user+'-other.csv','Years-league-data-'+user+'-other-saved.csv')
+	copyfile('Saved-data-files/Years-league-data-'+user+'-other.csv','Saved-data-files/Years-league-data-'+user+'-other-saved.csv')
 
 # The base url:
 url = 'https://letterboxd.com/'+user+'/films/'
@@ -359,7 +359,7 @@ for i in range(len(sfyears)):
 	sfrated_print = sfrated_print+[str(sfrated[i])]
 
 # Save the results to a temporary file:
-with open('Years-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
+with open('Saved-data-files/Years-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(sfyears_print)):
 		csvwriter.writerow([sfyears_print[i],sffilms_count[i],sfavgratings_print[i],sfseen_print[i],sfrated_print[i]])
@@ -367,7 +367,7 @@ with open('Years-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
 			csvwriter.writerow([sffilms_print[i][j]])
 
 # Check if saved file exists:
-datapath = Path('Years-league-data-'+user+'.csv')
+datapath = Path('Saved-data-files/Years-league-data-'+user+'.csv')
 datapathexists = 0
 if datapath.exists():
 	datapathexists = 1
@@ -382,7 +382,7 @@ if datapath.exists():
 	savedavgratings = []
 	savedseen = []
 	savedrated = []
-	with open('Years-league-data-'+user+'.csv') as csv_file:
+	with open('Saved-data-files/Years-league-data-'+user+'.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		count = 0
 		flag = 0
@@ -498,9 +498,9 @@ for i in range(len(sfyears_print)):
 
 # Copy old save file to a temporary file:
 if datapathexists == 1:
-	copyfile('Years-league-data-'+user+'.csv','Years-league-data-'+user+'-temp-old.csv')
+	copyfile('Saved-data-files/Years-league-data-'+user+'.csv','Saved-data-files/Years-league-data-'+user+'-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Years-league-data-'+user+'-temp-new.csv','Years-league-data-'+user+'.csv')
+copyfile('Saved-data-files/Years-league-data-'+user+'-temp-new.csv','Saved-data-files/Years-league-data-'+user+'.csv')
 
 # Also keep all years with 9 rated films:
 finalyearsX = []
@@ -513,13 +513,13 @@ for i in range(len(syears2)):
 		finalratedX = finalratedX+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Years-league-data-'+user+'-X-temp-new.csv', mode='w') as outfile:
+with open('Saved-data-files/Years-league-data-'+user+'-X-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finalyearsX)):
 		csvwriter.writerow([finalyearsX[i],finalseenX[i],finalratedX[i]])
 
 # Check if saved file exists:
-datapathX = Path('Years-league-data-'+user+'-X.csv')
+datapathX = Path('Saved-data-files/Years-league-data-'+user+'-X.csv')
 datapathXexists = 0
 if datapathX.exists():
 	datapathXexists = 1
@@ -531,7 +531,7 @@ if datapathX.exists():
 	savedyearsX = []
 	savedseenX = []
 	savedratedX = []
-	with open('Years-league-data-'+user+'-X.csv') as csv_file:
+	with open('Saved-data-files/Years-league-data-'+user+'-X.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			savedyearsX = savedyearsX+[row[0]]
@@ -577,9 +577,9 @@ if datapathX.exists():
 
 # Copy old save file to a temporary file:
 if datapathXexists == 1:
-	copyfile('Years-league-data-'+user+'-X.csv','Years-league-data-'+user+'-X-temp-old.csv')
+	copyfile('Saved-data-files/Years-league-data-'+user+'-X.csv','Saved-data-files/Years-league-data-'+user+'-X-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Years-league-data-'+user+'-X-temp-new.csv','Years-league-data-'+user+'-X.csv')
+copyfile('Saved-data-files/Years-league-data-'+user+'-X-temp-new.csv','Saved-data-files/Years-league-data-'+user+'-X.csv')
 
 # Print 9-rated year candidates
 print('')
@@ -653,13 +653,13 @@ for i in range(len(syears2)):
 			finalrated2 = finalrated2+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Years-league-data-'+user+'-other-temp-new.csv', mode='w') as outfile:
+with open('Saved-data-files/Years-league-data-'+user+'-other-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finalyears2)):
 		csvwriter.writerow([finalyears2[i],finalseen2[i],finalrated2[i]])
 
 # Check if saved file exists:
-datapath2 = Path('Years-league-data-'+user+'-other.csv')
+datapath2 = Path('Saved-data-files/Years-league-data-'+user+'-other.csv')
 datapath2exists = 0
 if datapath2.exists():
 	datapath2exists = 1
@@ -671,7 +671,7 @@ if datapath2.exists():
 	savedyears2 = []
 	savedseen2 = []
 	savedrated2 = []
-	with open('Years-league-data-'+user+'-other.csv') as csv_file:
+	with open('Saved-data-files/Years-league-data-'+user+'-other.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			savedyears2 = savedyears2+[row[0]]
@@ -717,9 +717,9 @@ if datapath2.exists():
 
 # Copy old save file to a temporary file:
 if datapath2exists == 1:
-	copyfile('Years-league-data-'+user+'-other.csv','Years-league-data-'+user+'-other-temp-old.csv')
+	copyfile('Saved-data-files/Years-league-data-'+user+'-other.csv','Saved-data-files/Years-league-data-'+user+'-other-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Years-league-data-'+user+'-other-temp-new.csv','Years-league-data-'+user+'-other.csv')
+copyfile('Saved-data-files/Years-league-data-'+user+'-other-temp-new.csv','Saved-data-files/Years-league-data-'+user+'-other.csv')
 
 # Print most-watched year candidates
 print('')
@@ -798,17 +798,17 @@ for i in range(len(finalyears2)):
 
 # Remove temporary files:
 if outputpath1exists == 1:
-	os.remove('Years-league-data-'+user+'-saved.csv')
+	os.remove('Saved-data-files/Years-league-data-'+user+'-saved.csv')
 if outputpath2exists == 1:
-	os.remove('Years-league-data-'+user+'-X-saved.csv')
+	os.remove('Saved-data-files/Years-league-data-'+user+'-X-saved.csv')
 if outputpath3exists == 1:
-	os.remove('Years-league-data-'+user+'-other-saved.csv')
-os.remove('Years-league-data-'+user+'-temp-new.csv')
-os.remove('Years-league-data-'+user+'-X-temp-new.csv')
-os.remove('Years-league-data-'+user+'-other-temp-new.csv')
+	os.remove('Saved-data-files/Years-league-data-'+user+'-other-saved.csv')
+os.remove('Saved-data-files/Years-league-data-'+user+'-temp-new.csv')
+os.remove('Saved-data-files/Years-league-data-'+user+'-X-temp-new.csv')
+os.remove('Saved-data-files/Years-league-data-'+user+'-other-temp-new.csv')
 if datapathexists == 1:
-	os.remove('Years-league-data-'+user+'-temp-old.csv')
+	os.remove('Saved-data-files/Years-league-data-'+user+'-temp-old.csv')
 if datapathXexists == 1:
-	os.remove('Years-league-data-'+user+'-X-temp-old.csv')
+	os.remove('Saved-data-files/Years-league-data-'+user+'-X-temp-old.csv')
 if datapath2exists == 1:
-	os.remove('Years-league-data-'+user+'-other-temp-old.csv')
+	os.remove('Saved-data-files/Years-league-data-'+user+'-other-temp-old.csv')

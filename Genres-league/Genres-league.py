@@ -123,26 +123,26 @@ def numsort(arraytosort,arraytomatch,isstring,highestfirst):
 user = input('\nEnter Letterboxd username: ')
 
 # Save backups of all output files in case something goes wrong:
-outputpath1 = Path('Genres-league-data-'+user+'.csv')
-outputpath2 = Path('Genres-league-data-'+user+'-X.csv')
-outputpath3 = Path('Genres-league-data-'+user+'-other.csv')
-outputpath4 = Path('Genres-league-data-'+user+'-other2.csv')
+outputpath1 = Path('Saved-data-files/Genres-league-data-'+user+'.csv')
+outputpath2 = Path('Saved-data-files/Genres-league-data-'+user+'-X.csv')
+outputpath3 = Path('Saved-data-files/Genres-league-data-'+user+'-other.csv')
+outputpath4 = Path('Saved-data-files/Genres-league-data-'+user+'-other2.csv')
 outputpath1exists = 0
 outputpath2exists = 0
 outputpath3exists = 0
 outputpath4exists = 0
 if outputpath1.exists():
 	outputpath1exists = 1
-	copyfile('Genres-league-data-'+user+'.csv','Genres-league-data-'+user+'-saved.csv')
+	copyfile('Saved-data-files/Genres-league-data-'+user+'.csv','Saved-data-files/Genres-league-data-'+user+'-saved.csv')
 if outputpath2.exists():
 	outputpath2exists = 1
-	copyfile('Genres-league-data-'+user+'-X.csv','Genres-league-data-'+user+'-X-saved.csv')
+	copyfile('Saved-data-files/Genres-league-data-'+user+'-X.csv','Saved-data-files/Genres-league-data-'+user+'-X-saved.csv')
 if outputpath3.exists():
 	outputpath3exists = 1
-	copyfile('Genres-league-data-'+user+'-other.csv','Genres-league-data-'+user+'-other-saved.csv')
+	copyfile('Saved-data-files/Genres-league-data-'+user+'-other.csv','Saved-data-files/Genres-league-data-'+user+'-other-saved.csv')
 if outputpath4.exists():
 	outputpath4exists = 1
-	copyfile('Genres-league-data-'+user+'-other2.csv','Genres-league-data-'+user+'-other2-saved.csv')
+	copyfile('Saved-data-files/Genres-league-data-'+user+'-other2.csv','Saved-data-files/Genres-league-data-'+user+'-other2-saved.csv')
 
 # The base url:
 url = 'https://letterboxd.com/'+user+'/films/'
@@ -421,7 +421,7 @@ for i in range(len(sfgenres)):
 	sfrated_print = sfrated_print+[str(sfrated[i])]
 
 # Save the results to a temporary file:
-with open('Genres-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
+with open('Saved-data-files/Genres-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(sfgenres_print)):
 		csvwriter.writerow([sfgenres_print[i],sffilms_count[i],sfavgratings_print[i],sfseen_print[i],sfrated_print[i]])
@@ -429,7 +429,7 @@ with open('Genres-league-data-'+user+'-temp-new.csv', mode='w') as outfile:
 			csvwriter.writerow([sffilms_print[i][j]])
 
 # Check if saved file exists:
-datapath = Path('Genres-league-data-'+user+'.csv')
+datapath = Path('Saved-data-files/Genres-league-data-'+user+'.csv')
 datapathexists = 0
 if datapath.exists():
 	datapathexists = 1
@@ -444,7 +444,7 @@ if datapath.exists():
 	savedavgratings = []
 	savedseen = []
 	savedrated = []
-	with open('Genres-league-data-'+user+'.csv') as csv_file:
+	with open('Saved-data-files/Genres-league-data-'+user+'.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		count = 0
 		flag = 0
@@ -560,9 +560,9 @@ for i in range(len(sfgenres_print)):
 
 # Copy old save file to a temporary file:
 if datapathexists == 1:
-	copyfile('Genres-league-data-'+user+'.csv','Genres-league-data-'+user+'-temp-old.csv')
+	copyfile('Saved-data-files/Genres-league-data-'+user+'.csv','Saved-data-files/Genres-league-data-'+user+'-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Genres-league-data-'+user+'-temp-new.csv','Genres-league-data-'+user+'.csv')
+copyfile('Saved-data-files/Genres-league-data-'+user+'-temp-new.csv','Saved-data-files/Genres-league-data-'+user+'.csv')
 
 # Also keep all genres with 19 rated films:
 finalgenresX = []
@@ -575,13 +575,13 @@ for i in range(len(sgenres2)):
 		finalratedX = finalratedX+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Genres-league-data-'+user+'-X-temp-new.csv', mode='w') as outfile:
+with open('Saved-data-files/Genres-league-data-'+user+'-X-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finalgenresX)):
 		csvwriter.writerow([finalgenresX[i],finalseenX[i],finalratedX[i]])
 
 # Check if saved file exists:
-datapathX = Path('Genres-league-data-'+user+'-X.csv')
+datapathX = Path('Saved-data-files/Genres-league-data-'+user+'-X.csv')
 datapathXexists = 0
 if datapathX.exists():
 	datapathXexists = 1
@@ -593,7 +593,7 @@ if datapathX.exists():
 	savedgenresX = []
 	savedseenX = []
 	savedratedX = []
-	with open('Genres-league-data-'+user+'-X.csv') as csv_file:
+	with open('Saved-data-files/Genres-league-data-'+user+'-X.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			savedgenresX = savedgenresX+[row[0]]
@@ -639,9 +639,9 @@ if datapathX.exists():
 
 # Copy old save file to a temporary file:
 if datapathXexists == 1:
-	copyfile('Genres-league-data-'+user+'-X.csv','Genres-league-data-'+user+'-X-temp-old.csv')
+	copyfile('Saved-data-files/Genres-league-data-'+user+'-X.csv','Saved-data-files/Genres-league-data-'+user+'-X-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Genres-league-data-'+user+'-X-temp-new.csv','Genres-league-data-'+user+'-X.csv')
+copyfile('Saved-data-files/Genres-league-data-'+user+'-X-temp-new.csv','Saved-data-files/Genres-league-data-'+user+'-X.csv')
 
 # Print 19-rated genre candidates
 print('')
@@ -715,13 +715,13 @@ for i in range(len(sgenres2)):
 			finalrated2 = finalrated2+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Genres-league-data-'+user+'-other-temp-new.csv', mode='w') as outfile:
+with open('Saved-data-files/Genres-league-data-'+user+'-other-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finalgenres2)):
 		csvwriter.writerow([finalgenres2[i],finalseen2[i],finalrated2[i]])
 
 # Check if saved file exists:
-datapath2 = Path('Genres-league-data-'+user+'-other.csv')
+datapath2 = Path('Saved-data-files/Genres-league-data-'+user+'-other.csv')
 datapath2exists = 0
 if datapath2.exists():
 	datapath2exists = 1
@@ -733,7 +733,7 @@ if datapath2.exists():
 	savedgenres2 = []
 	savedseen2 = []
 	savedrated2 = []
-	with open('Genres-league-data-'+user+'-other.csv') as csv_file:
+	with open('Saved-data-files/Genres-league-data-'+user+'-other.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			savedgenres2 = savedgenres2+[row[0]]
@@ -779,9 +779,9 @@ if datapath2.exists():
 
 # Copy old save file to a temporary file:
 if datapath2exists == 1:
-	copyfile('Genres-league-data-'+user+'-other.csv','Genres-league-data-'+user+'-other-temp-old.csv')
+	copyfile('Saved-data-files/Genres-league-data-'+user+'-other.csv','Saved-data-files/Genres-league-data-'+user+'-other-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Genres-league-data-'+user+'-other-temp-new.csv','Genres-league-data-'+user+'-other.csv')
+copyfile('Saved-data-files/Genres-league-data-'+user+'-other-temp-new.csv','Saved-data-files/Genres-league-data-'+user+'-other.csv')
 
 # Print most-watched genre candidates
 print('')
@@ -855,13 +855,13 @@ for i in range(len(sgenres2)):
 			finalrated3 = finalrated3+[srated2[i]]
 
 # Save the results to a temporary file:
-with open('Genres-league-data-'+user+'-other2-temp-new.csv', mode='w') as outfile:
+with open('Saved-data-files/Genres-league-data-'+user+'-other2-temp-new.csv', mode='w') as outfile:
 	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for i in range(len(finalgenres3)):
 		csvwriter.writerow([finalgenres3[i],finalseen3[i],finalrated3[i]])
 
 # Check if saved file exists:
-datapath3 = Path('Genres-league-data-'+user+'-other2.csv')
+datapath3 = Path('Saved-data-files/Genres-league-data-'+user+'-other2.csv')
 datapath3exists = 0
 if datapath3.exists():
 	datapath3exists = 1
@@ -873,7 +873,7 @@ if datapath3.exists():
 	savedgenres3 = []
 	savedseen3 = []
 	savedrated3 = []
-	with open('Genres-league-data-'+user+'-other2.csv') as csv_file:
+	with open('Saved-data-files/Genres-league-data-'+user+'-other2.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			savedgenres3 = savedgenres3+[row[0]]
@@ -919,9 +919,9 @@ if datapath3.exists():
 
 # Copy old save file to a temporary file:
 if datapath3exists == 1:
-	copyfile('Genres-league-data-'+user+'-other2.csv','Genres-league-data-'+user+'-other2-temp-old.csv')
+	copyfile('Saved-data-files/Genres-league-data-'+user+'-other2.csv','Saved-data-files/Genres-league-data-'+user+'-other2-temp-old.csv')
 # Copy new temporary file to the save file:
-copyfile('Genres-league-data-'+user+'-other2-temp-new.csv','Genres-league-data-'+user+'-other2.csv')
+copyfile('Saved-data-files/Genres-league-data-'+user+'-other2-temp-new.csv','Saved-data-files/Genres-league-data-'+user+'-other2.csv')
 
 # Print the rest of the genre candidates
 print('')
@@ -1019,22 +1019,22 @@ for i in range(len(finalgenres3)):
 
 # Remove temporary files:
 if outputpath1exists == 1:
-	os.remove('Genres-league-data-'+user+'-saved.csv')
+	os.remove('Saved-data-files/Genres-league-data-'+user+'-saved.csv')
 if outputpath2exists == 1:
-	os.remove('Genres-league-data-'+user+'-X-saved.csv')
+	os.remove('Saved-data-files/Genres-league-data-'+user+'-X-saved.csv')
 if outputpath3exists == 1:
-	os.remove('Genres-league-data-'+user+'-other-saved.csv')
+	os.remove('Saved-data-files/Genres-league-data-'+user+'-other-saved.csv')
 if outputpath4exists == 1:
-	os.remove('Genres-league-data-'+user+'-other2-saved.csv')
-os.remove('Genres-league-data-'+user+'-temp-new.csv')
-os.remove('Genres-league-data-'+user+'-X-temp-new.csv')
-os.remove('Genres-league-data-'+user+'-other-temp-new.csv')
-os.remove('Genres-league-data-'+user+'-other2-temp-new.csv')
+	os.remove('Saved-data-files/Genres-league-data-'+user+'-other2-saved.csv')
+os.remove('Saved-data-files/Genres-league-data-'+user+'-temp-new.csv')
+os.remove('Saved-data-files/Genres-league-data-'+user+'-X-temp-new.csv')
+os.remove('Saved-data-files/Genres-league-data-'+user+'-other-temp-new.csv')
+os.remove('Saved-data-files/Genres-league-data-'+user+'-other2-temp-new.csv')
 if datapathexists == 1:
-	os.remove('Genres-league-data-'+user+'-temp-old.csv')
+	os.remove('Saved-data-files/Genres-league-data-'+user+'-temp-old.csv')
 if datapathXexists == 1:
-	os.remove('Genres-league-data-'+user+'-X-temp-old.csv')
+	os.remove('Saved-data-files/Genres-league-data-'+user+'-X-temp-old.csv')
 if datapath2exists == 1:
-	os.remove('Genres-league-data-'+user+'-other-temp-old.csv')
+	os.remove('Saved-data-files/Genres-league-data-'+user+'-other-temp-old.csv')
 if datapath3exists == 1:
-	os.remove('Genres-league-data-'+user+'-other2-temp-old.csv')
+	os.remove('Saved-data-files/Genres-league-data-'+user+'-other2-temp-old.csv')
