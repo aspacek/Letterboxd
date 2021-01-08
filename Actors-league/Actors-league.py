@@ -124,6 +124,14 @@ print('\nNote: Letterboxd username needs to match how it appears in the profile 
 print('      i.e. letterboxd.com/<username>/')
 user = input('\nEnter Letterboxd username: ')
 
+# Backup previous output file and open a new one:
+printoutpath = Path('Saved-data-files/Output-'+user+'.txt')
+printoutpathexists = 0
+if printoutpath.exists():
+	printoutpathexists = 1
+	copyfile('Saved-data-files/Output-'+user+'.txt','Saved-data-files/Output-'+user+'-saved.txt')
+outfile = open('Saved-data-files/Output-'+user+'.txt','w')
+
 # Save backups of all output files in case something goes wrong:
 outputpath1 = Path('Saved-data-files/Actors-league-data-'+user+'.csv')
 outputpath2 = Path('Saved-data-files/Actors-league-data-'+user+'-X.csv')
@@ -417,10 +425,10 @@ datapath = Path('Saved-data-files/Actors-league-data-'+user+'.csv')
 datapathexists = 0
 if datapath.exists():
 	datapathexists = 1
-	print('')
-	print('******************************')
-	print('** LEAGUE RESULTS CHANGES ****')
-	print('******************************')
+	outfile.write('')
+	outfile.write('******************************')
+	outfile.write('** LEAGUE RESULTS CHANGES ****')
+	outfile.write('******************************')
 	# Read it in:
 	savedactors = []
 	savedfilms_count = []
@@ -488,11 +496,11 @@ if datapath.exists():
 				if savedactors[i] == sfactors_print[j]:
 					removeactorsflag = 1
 					if savedavgratings[i] != sfavgratings_print[j]:
-						print(savedactors[i]+' - Avg Rating Changed To '+sfavgratings_print[j])
+						outfile.write(savedactors[i]+' - Avg Rating Changed To '+sfavgratings_print[j])
 					if savedseen[i] != sfseen_print[j]:
-						print(savedactors[i]+' - Num Seen Changed To '+sfseen_print[j])
+						outfile.write(savedactors[i]+' - Num Seen Changed To '+sfseen_print[j])
 					if savedrated[i] != sfrated_print[j]:
-						print(savedactors[i]+' - Num Rated Changed To '+sfrated_print[j])
+						outfile.write(savedactors[i]+' - Num Rated Changed To '+sfrated_print[j])
 					for k in range(savedfilms_count[i]):
 						film_match = 0
 						m = 0
@@ -501,10 +509,10 @@ if datapath.exists():
 								film_match = 1
 							m = m+1
 						if film_match == 0:
-							print(savedactors[i]+' - Film Removed From List Or Changed - '+savedfilms[i][k])
+							outfile.write(savedactors[i]+' - Film Removed From List Or Changed - '+savedfilms[i][k])
 				j = j+1
 			if removeactorsflag == 0:
-				print(savedactors[i]+' - Actor Removed From List! (somehow)')
+				outfile.write(savedactors[i]+' - Actor Removed From List! (somehow)')
 		# Find out new entries to add:
 		for i in range(len(sfactors_print)):
 			newactorsflag = 0
@@ -520,29 +528,29 @@ if datapath.exists():
 								film_match = 1
 							m = m+1
 						if film_match == 0:
-							print(sfactors_print[i]+' - New film added - '+sffilms_print[i][k])
+							outfile.write(sfactors_print[i]+' - New film added - '+sffilms_print[i][k])
 				j = j+1
 			if newactorsflag == 0:
-				print(sfactors_print[i]+' - New Actor To Add!')
-				print(' - Avg Rating = '+sfavgratings_print[i])
-				print(' - Num Seen = '+sfseen_print[i])
-				print(' - Num Rated = '+sfrated_print[i])
+				outfile.write(sfactors_print[i]+' - New Actor To Add!')
+				outfile.write(' - Avg Rating = '+sfavgratings_print[i])
+				outfile.write(' - Num Seen = '+sfseen_print[i])
+				outfile.write(' - Num Rated = '+sfrated_print[i])
 	else:
-		print('No Difference! Nothing New To Add!')
+		outfile.write('No Difference! Nothing New To Add!')
 
 # Print out results:
-print('')
-print('******************************')
-print('** FULL LEAGUE RESULTS *******')
-print('******************************')
+outfile.write('')
+outfile.write('******************************')
+outfile.write('** FULL LEAGUE RESULTS *******')
+outfile.write('******************************')
 for i in range(len(sfactors_print)):
-	print('')
-	print(sfactors_print[i])
-	print('Avg rating = '+sfavgratings_print[i])
-	print('Number seen = '+sfseen_print[i])
-	print('Number rated = '+sfrated_print[i])
+	outfile.write('')
+	outfile.write(sfactors_print[i])
+	outfile.write('Avg rating = '+sfavgratings_print[i])
+	outfile.write('Number seen = '+sfseen_print[i])
+	outfile.write('Number rated = '+sfrated_print[i])
 	for j in range(sffilms_count[i]):
-		print(sffilms_print[i][j])
+		outfile.write(sffilms_print[i][j])
 
 # Copy old save file to a temporary file:
 if datapathexists == 1:
@@ -571,10 +579,10 @@ datapathX = Path('Saved-data-files/Actors-league-data-'+user+'-X.csv')
 datapathXexists = 0
 if datapathX.exists():
 	datapathXexists = 1
-	print('')
-	print('******************************')
-	print('** ALMOST RESULTS CHANGES ****')
-	print('******************************')
+	outfile.write('')
+	outfile.write('******************************')
+	outfile.write('** ALMOST RESULTS CHANGES ****')
+	outfile.write('******************************')
 	# Read it in:
 	savedactorsX = []
 	savedseenX = []
@@ -602,12 +610,12 @@ if datapathX.exists():
 				if savedactorsX[i] == finalactorsX[j]:
 					removeactorsflagX = 1
 					if savedseenX[i] != finalseenX[j]:
-						print(savedactorsX[i]+' - Num Seen Changed To '+str(finalseenX[j]))
+						outfile.write(savedactorsX[i]+' - Num Seen Changed To '+str(finalseenX[j]))
 					if savedratedX[i] != finalratedX[j]:
-						print(savedactorsX[i]+' - Num Rated Changed To '+str(finalratedX[j]))
+						outfile.write(savedactorsX[i]+' - Num Rated Changed To '+str(finalratedX[j]))
 				j = j+1
 			if removeactorsflagX == 0:
-				print(savedactorsX[i]+' - Actor Removed From List! (somehow)')
+				outfile.write(savedactorsX[i]+' - Actor Removed From List! (somehow)')
 		# Find out new entries to add:
 		for i in range(len(finalactorsX)):
 			newactorsflagX = 0
@@ -617,11 +625,11 @@ if datapathX.exists():
 					newactorsflagX = 1
 				j = j+1
 			if newactorsflagX == 0:
-				print(finalactorsX[i]+' - New Actor To Add!')
-				print(' - Num Seen = '+str(finalseenX[i]))
-				print(' - Num Rated = '+str(finalratedX[i]))
+				outfile.write(finalactorsX[i]+' - New Actor To Add!')
+				outfile.write(' - Num Seen = '+str(finalseenX[i]))
+				outfile.write(' - Num Rated = '+str(finalratedX[i]))
 	else:
-		print('No Difference! Nothing New To Add!')
+		outfile.write('No Difference! Nothing New To Add!')
 
 # Copy old save file to a temporary file:
 if datapathXexists == 1:
@@ -630,15 +638,15 @@ if datapathXexists == 1:
 copyfile('Saved-data-files/Actors-league-data-'+user+'-X-temp-new.csv','Saved-data-files/Actors-league-data-'+user+'-X.csv')
 
 # Print 9-rated actor candidates
-print('')
-print('******************************')
-print('** ALMOST RESULTS ************')
-print('******************************')
+outfile.write('')
+outfile.write('******************************')
+outfile.write('** ALMOST RESULTS ************')
+outfile.write('******************************')
 for i in range(len(finalactorsX)):
-	print('')
-	print(finalactorsX[i])
-	print('Number seen = '+str(finalseenX[i]))
-	print('Number rated = '+str(finalratedX[i]))
+	outfile.write('')
+	outfile.write(finalactorsX[i])
+	outfile.write('Number seen = '+str(finalseenX[i]))
+	outfile.write('Number rated = '+str(finalratedX[i]))
 
 # Also keep all actors with at least 20 watched films and less than 9 rated films
 # Rank by number seen, then number rated:
@@ -711,10 +719,10 @@ datapath2 = Path('Saved-data-files/Actors-league-data-'+user+'-other.csv')
 datapath2exists = 0
 if datapath2.exists():
 	datapath2exists = 1
-	print('')
-	print('******************************')
-	print('** REWATCH RESULTS CHANGES ***')
-	print('******************************')
+	outfile.write('')
+	outfile.write('******************************')
+	outfile.write('** REWATCH RESULTS CHANGES ***')
+	outfile.write('******************************')
 	# Read it in:
 	savedactors2 = []
 	savedseen2 = []
@@ -742,12 +750,12 @@ if datapath2.exists():
 				if savedactors2[i] == finalactors2[j]:
 					removeactorsflag2 = 1
 					if savedseen2[i] != finalseen2[j]:
-						print(savedactors2[i]+' - Num Seen Changed To '+str(finalseen2[j]))
+						outfile.write(savedactors2[i]+' - Num Seen Changed To '+str(finalseen2[j]))
 					if savedrated2[i] != finalrated2[j]:
-						print(savedactors2[i]+' - Num Rated Changed To '+str(finalrated2[j]))
+						outfile.write(savedactors2[i]+' - Num Rated Changed To '+str(finalrated2[j]))
 				j = j+1
 			if removeactorsflag2 == 0:
-				print(savedactors2[i]+' - Actor Removed From List! (somehow)')
+				outfile.write(savedactors2[i]+' - Actor Removed From List! (somehow)')
 		# Find out new entries to add:
 		for i in range(len(finalactors2)):
 			newactorsflag2 = 0
@@ -757,11 +765,11 @@ if datapath2.exists():
 					newactorsflag2 = 1
 				j = j+1
 			if newactorsflag2 == 0:
-				print(finalactors2[i]+' - New Actor To Add!')
-				print(' - Num Seen = '+str(finalseen2[i]))
-				print(' - Num Rated = '+str(finalrated2[i]))
+				outfile.write(finalactors2[i]+' - New Actor To Add!')
+				outfile.write(' - Num Seen = '+str(finalseen2[i]))
+				outfile.write(' - Num Rated = '+str(finalrated2[i]))
 	else:
-		print('No Difference! Nothing New To Add!')
+		outfile.write('No Difference! Nothing New To Add!')
 
 # Copy old save file to a temporary file:
 if datapath2exists == 1:
@@ -770,26 +778,26 @@ if datapath2exists == 1:
 copyfile('Saved-data-files/Actors-league-data-'+user+'-other-temp-new.csv','Saved-data-files/Actors-league-data-'+user+'-other.csv')
 
 # Print most-watched actor candidates
-print('')
-print('******************************')
-print('** REWATCH RESULTS ***********')
-print('******************************')
+outfile.write('')
+outfile.write('******************************')
+outfile.write('** REWATCH RESULTS ***********')
+outfile.write('******************************')
 for i in range(len(finalactors2)):
-	print('')
-	print(finalactors2[i])
-	print('Number seen = '+str(finalseen2[i]))
-	print('Number rated = '+str(finalrated2[i]))
+	outfile.write('')
+	outfile.write(finalactors2[i])
+	outfile.write('Number seen = '+str(finalseen2[i]))
+	outfile.write('Number rated = '+str(finalrated2[i]))
 
 # Print full "almost" and "rewatch" results:
-print('')
-print('******************************')
-print('** FULL ALMOST RESULTS *******')
-print('******************************')
+outfile.write('')
+outfile.write('******************************')
+outfile.write('** FULL ALMOST RESULTS *******')
+outfile.write('******************************')
 for i in range(len(finalactorsX)):
-	print('')
-	print(finalactorsX[i])
-	print('Number seen = '+str(finalseenX[i]))
-	print('Number rated = '+str(finalratedX[i]))
+	outfile.write('')
+	outfile.write(finalactorsX[i])
+	outfile.write('Number seen = '+str(finalseenX[i]))
+	outfile.write('Number rated = '+str(finalratedX[i]))
 	for j in range(len(films)):
 		if actors[j] == finalactorsX[i]:
 			if runtimes[j] >= 40:
@@ -801,19 +809,19 @@ for i in range(len(finalactorsX)):
 								skipflag = 1
 				if skipflag == 0:
 					if ratings[j] == '0':
-						print('   '+films[j])
+						outfile.write('   '+films[j])
 					else:
-						print('** '+films[j])
+						outfile.write('** '+films[j])
 
-print('')
-print('******************************')
-print('** FULL REWATCH RESULTS ******')
-print('******************************')
+outfile.write('')
+outfile.write('******************************')
+outfile.write('** FULL REWATCH RESULTS ******')
+outfile.write('******************************')
 for i in range(len(finalactors2)):
-	print('')
-	print(finalactors2[i])
-	print('Number seen = '+str(finalseen2[i]))
-	print('Number rated = '+str(finalrated2[i]))
+	outfile.write('')
+	outfile.write(finalactors2[i])
+	outfile.write('Number seen = '+str(finalseen2[i]))
+	outfile.write('Number rated = '+str(finalrated2[i]))
 	for j in range(len(films)):
 		if actors[j] == finalactors2[i]:
 			if runtimes[j] >= 40:
@@ -825,11 +833,16 @@ for i in range(len(finalactors2)):
 								skipflag = 1
 				if skipflag == 0:
 					if ratings[j] == '0':
-						print('   '+films[j])
+						outfile.write('   '+films[j])
 					else:
-						print('** '+films[j])
+						outfile.write('** '+films[j])
+
+# Close output file:
+outfile.close()
 
 # Remove temporary files:
+if printoutpathexists == 1:
+	os.remove('Saved-data-files/Output-'+user+'-saved.txt')
 if outputpath1exists == 1:
 	os.remove('Saved-data-files/Actors-league-data-'+user+'-saved.csv')
 if outputpath2exists == 1:
