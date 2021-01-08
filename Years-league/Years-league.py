@@ -21,100 +21,17 @@ from shutil import copyfile
 
 import os
 
+sys.path.insert(0, "../General-league-routines")
+from Findstrings import findstrings
+from Getstrings import getstrings
+from Numsort import numsort
+from Getuserfilms import getuserfilms
+from Getfilminfo import getfilminfo
+
 ##
 ## Written by Alex Spacek
 ## December 2020 - January 2020
 ##
-
-##################################
-def findstrings(substring,string):
-	lastfound = -1
-	while True:
-		lastfound = string.find(substring,lastfound+1)
-		if lastfound == -1:  
-			break
-		yield lastfound
-
-##################################################
-def getstrings(which,prestring,poststring,source):
-	# First find the start of the number of pages string:
-	length = len(prestring)
-	prevalue = list(findstrings(prestring,source))
-	if len(prevalue) > 0:
-		# If first instance wanted:
-		if which == 'first':
-			prevalue = [prevalue[0]+length]
-		# If last instance wanted:
-		elif which == 'last':
-			prevalue = [prevalue[-1]+length]
-		# If all instances wanted:
-		elif which == 'all':
-			prevalue = [item+length for item in prevalue]
-		else:
-			sys.exit('ERROR - in function "getstrings" - Invalid input for "which"')
-	else:
-		return ''
-	# Find the location of the end of string, and get the strings:
-	strings = []
-	for beginning in prevalue:
-		end = source.find(poststring,beginning)
-		value = source[beginning:end]
-		strings = strings+[value]
-	# If just one string desired, return a scalar, otherwise return the array:
-	if which == 'first' or which == 'last':
-		return strings[0]
-	elif which == 'all':
-		return strings
-
-###################################################
-def numsort(arraytosort,arraytomatch,isstring,highestfirst):
-	# Make sure array lengths match:
-	if len(arraytosort) != len(arraytomatch):
-		sys.exit('ERROR - in function "numsort" - Array lengths do not match.')
-	# Initialize final arrays:
-	finalarraytosort = [-1 for i in arraytosort]
-	if isstring == 1:
-		finalarraytomatch = ['-1' for i in arraytomatch]
-	else:
-		finalarraytomatch = [-1 for i in arraytomatch]
-	# Sort with highest value first:
-	if highestfirst == 1:
-		# Loop through everything until sorted:
-		flag = 0
-		loc = 0
-		while flag == 0:
-			# Find max value:
-			maxval = max(arraytosort)
-			# Put all max values next in the final arrays:
-			toremove = []
-			for i in range(len(arraytosort)):
-				if arraytosort[i] == maxval:
-					finalarraytosort[loc] = arraytosort[i]
-					finalarraytomatch[loc] = arraytomatch[i]
-					loc = loc+1
-					toremove = toremove+[i]
-			# Remove values already used, from back to front:
-			toremove.reverse()
-			for i in range(len(toremove)):
-				del arraytosort[toremove[i]]
-				del arraytomatch[toremove[i]]
-			# If arrays are empty, done:
-			if arraytosort == []:
-				flag = 1
-		# Make sure arrays are completely filled:
-		for i in range(len(finalarraytosort)):
-			if finalarraytosort[i] == -1:
-				sys.exit('ERROR - in function "numsort" - Arrays not sorted correctly.')
-			if isstring == 1:
-				if finalarraytomatch[i] == '-1':
-					sys.exit('ERROR - in function "numsort" - Arrays not sorted correctly.')
-			else:
-				if finalarraytomatch[i] == -1:
-					sys.exit('ERROR - in function "numsort" - Arrays not sorted correctly.')
-	# Sort with lowest value first:
-	else:
-		sys.exit('ERROR - in function "numsort" - highestfirst = 0 not implemented yet.')
-	return finalarraytosort,finalarraytomatch
 
 ############################################################################
 ############################################################################
@@ -149,83 +66,11 @@ if outputpath3.exists():
 	outputpath3exists = 1
 	copyfile('Saved-data-files/Years-league-data-'+user+'-other.csv','Saved-data-files/Years-league-data-'+user+'-other-saved.csv')
 
-# The base url:
-url = 'https://letterboxd.com/'+user+'/films/'
-# Grab source code for the first page:
-r = requests.get(url)
-source = r.text
-# Find the number of pages
-pages = int(getstrings('last','href="/'+user+'/films/page/','/">',source))
-# Initialize results:
-films = []
-ratings = []
-# Start on page 1, get the films:
-films = films+getstrings('all','data-film-slug="/film/','/"',source)
-# Also get the ratings:
-# Grab all film info blocks:
-film_blocks = getstrings('all','data-film-slug="/film/','</p>',source)
-# For each, check if there is a rating, and if so, get it:
-for i in range(len(film_blocks)):
-	ratings_check = list(findstrings('-darker rated-',film_blocks[i]))
-	if ratings_check == []:
-		ratings = ratings+['0']
-	else:
-		ratings = ratings+[getstrings('first','-darker rated-','">',film_blocks[i])]
-print('')
-print('Page 1/'+str(pages)+' Done')
-# Now loop through the rest of the pages:
-for page in range(pages-1):
-	# Start on page 2:
-	page = str(page + 2)
-	# Grab source code of the page:
-	r = requests.get(url+'page/'+page+'/')
-	source = r.text
-	# Get the films:
-	films = films+getstrings('all','data-film-slug="/film/','/"',source)
-	# Also get the ratings:
-	# Grab all film info blocks:
-	film_blocks = getstrings('all','data-film-slug="/film/','</p>',source)
-	# For each, check if there is a rating, and if so, get it:
-	for i in range(len(film_blocks)):
-		ratings_check = list(findstrings('-darker rated-',film_blocks[i]))
-		if ratings_check == []:
-			ratings = ratings+['0']
-		else:
-			ratings = ratings+[getstrings('first','-darker rated-','">',film_blocks[i])]
-	print('Page '+page+'/'+str(pages)+' Done')
+# Get user films:
+films,ratings = getuserfilms(user)
 
-# For each film, get the year:
-print('')
-starttime = time.time()
-years = []
-runtimes = []
-for i in range(len(films)):
-	# The base url of the film's page:
-	url = 'https://letterboxd.com/film/'+films[i]+'/'
-	# Grab source code for the film's page:
-	r = requests.get(url)
-	source = r.text
-	# Get the film title:
-	film_name = getstrings('last','name: "','",',source)
-	# Get the film year:
-	years = years+[getstrings('first','releaseYear: "','",',source)]
-	# Get the runtime, if there is one:
-	runtime_check = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t','More details at',source)
-	if runtime_check == '\n\t\t\t\t\n\t\t\t\t\t':
-		runtimes = runtimes+[-1]
-	else:
-		runtime = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t','&nbsp;min',source)
-		locale.setlocale(locale.LC_ALL,'en_US.UTF-8')
-		runtime_int = locale.atoi(runtime)
-		runtimes = runtimes+[runtime_int]
-	if (i+1)%50 == 0:
-		print('Films '+str(i+1)+'/'+str(len(films))+' Done')
-		currenttime = time.time()
-		elapsedtime = currenttime-starttime
-		timeperfilm = elapsedtime/(i+1)
-		filmsleft = len(films)-(i+1)
-		timeleft = filmsleft*timeperfilm
-		print('Estimated time remaining = '+str(int(timeleft/60))+' min')
+# Get film info:
+films,ratings,years,runtimes = getfilminfo(films,['years','runtimes'])
 
 # Read in films to ignore:
 ignorefilmsdatapath = Path('Films-that-dont-count.txt')
