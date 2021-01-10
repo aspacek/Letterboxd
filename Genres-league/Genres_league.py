@@ -1,5 +1,5 @@
 ######################
-## Genres-league.py ##
+## Genres_league.py ##
 ######################
 
 # sys module - reads in input values
@@ -30,7 +30,7 @@ from Getfilminfo import getfilminfo
 
 ##
 ## Written by Alex Spacek
-## December 2020 - January 2020
+## December 2020 - January 2021
 ##
 
 ############################################################################
@@ -50,7 +50,8 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 	if printoutpath.exists():
 		printoutpathexists = 1
 		copyfile('Saved-data-files/Output-'+user+'.txt','Saved-data-files/Output-'+user+'-saved.txt')
-	
+	resultsfile = open('Saved-data-files/Output-'+user+'.txt','w')
+
 	# Save backups of all output files in case something goes wrong:
 	outputpath1 = Path('Saved-data-files/Genres-league-data-'+user+'.csv')
 	outputpath2 = Path('Saved-data-files/Genres-league-data-'+user+'-X.csv')
@@ -78,7 +79,7 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 		films,ratings = getuserfilms(user)
 
 		# Get film info:
-		films,ratings,genres,runtimes = getfilminfo(films,['genres','runtimes'])
+		films,ratings,genres,runtimes = getfilminfo(films,ratings,['genres','runtimes'])
 	
 	# Remove any blank genre names or films with no genres:
 	xfilms = []
@@ -244,10 +245,9 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 	datapathexists = 0
 	if datapath.exists():
 		datapathexists = 1
-		outfile.write('')
-		outfile.write('******************************')
-		outfile.write('** LEAGUE RESULTS CHANGES ****')
-		outfile.write('******************************')
+		resultsfile.write('\n******************************')
+		resultsfile.write('\n** LEAGUE RESULTS CHANGES ****')
+		resultsfile.write('\n******************************')
 		# Read it in:
 		savedgenres = []
 		savedfilms_count = []
@@ -315,11 +315,11 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 					if savedgenres[i] == sfgenres_print[j]:
 						removegenresflag = 1
 						if savedavgratings[i] != sfavgratings_print[j]:
-							outfile.write(savedgenres[i]+' - Avg Rating Changed To '+sfavgratings_print[j])
+							resultsfile.write('\n'+savedgenres[i]+' - Avg Rating Changed To '+sfavgratings_print[j])
 						if savedseen[i] != sfseen_print[j]:
-							outfile.write(savedgenres[i]+' - Num Seen Changed To '+sfseen_print[j])
+							resultsfile.write('\n'+savedgenres[i]+' - Num Seen Changed To '+sfseen_print[j])
 						if savedrated[i] != sfrated_print[j]:
-							outfile.write(savedgenres[i]+' - Num Rated Changed To '+sfrated_print[j])
+							resultsfile.write('\n'+savedgenres[i]+' - Num Rated Changed To '+sfrated_print[j])
 						for k in range(savedfilms_count[i]):
 							film_match = 0
 							m = 0
@@ -328,10 +328,10 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 									film_match = 1
 								m = m+1
 							if film_match == 0:
-								outfile.write(savedgenres[i]+' - Film Removed From List Or Changed - '+savedfilms[i][k])
+								resultsfile.write('\n'+savedgenres[i]+' - Film Removed From List Or Changed - '+savedfilms[i][k])
 					j = j+1
 				if removegenresflag == 0:
-					outfile.write(savedgenres[i]+' - Genre Removed From List! (somehow)')
+					resultsfile.write('\n'+savedgenres[i]+' - Genre Removed From List! (somehow)')
 			# Find out new entries to add:
 			for i in range(len(sfgenres_print)):
 				newgenresflag = 0
@@ -347,27 +347,28 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 									film_match = 1
 								m = m+1
 							if film_match == 0:
-								outfile.write(sfgenres_print[i]+' - New film added - '+sffilms_print[i][k])
+								resultsfile.write('\n'+sfgenres_print[i]+' - New film added - '+sffilms_print[i][k])
 					j = j+1
 				if newgenresflag == 0:
-					outfile.write(sfgenres_print[i]+' - New Genre To Add!')
-					outfile.write(' - Avg Rating = '+sfavgratings_print[i])
-					outfile.write(' - Num Seen = '+sfseen_print[i])
-					outfile.write(' - Num Rated = '+sfrated_print[i])
+					resultsfile.write('\n'+sfgenres_print[i]+' - New Genre To Add!')
+					resultsfile.write('\n - Avg Rating = '+sfavgratings_print[i])
+					resultsfile.write('\n - Num Seen = '+sfseen_print[i])
+					resultsfile.write('\n - Num Rated = '+sfrated_print[i])
 		else:
-			outfile.write('No Difference! Nothing New To Add!')
+			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	
 	# Print out limited results:
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** LEAGUE RESULTS ************')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** LEAGUE RESULTS ************')
+	resultsfile.write('\n******************************')
 	for i in range(len(sfgenres_print)):
-		outfile.write('')
-		outfile.write(sfgenres_print[i])
-		outfile.write('Avg rating = '+sfavgratings_print[i])
-		outfile.write('Number seen = '+sfseen_print[i])
-		outfile.write('Number rated = '+sfrated_print[i])
+		resultsfile.write('\n')
+		resultsfile.write('\n('+str(i+1)+')')
+		resultsfile.write('\n'+sfgenres_print[i])
+		resultsfile.write('\nAvg rating = '+sfavgratings_print[i])
+		resultsfile.write('\nNumber seen = '+sfseen_print[i])
+		resultsfile.write('\nNumber rated = '+sfrated_print[i])
 	
 	# Copy old save file to a temporary file:
 	if datapathexists == 1:
@@ -396,10 +397,10 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 	datapathXexists = 0
 	if datapathX.exists():
 		datapathXexists = 1
-		outfile.write('')
-		outfile.write('******************************')
-		outfile.write('** ALMOST RESULTS CHANGES ****')
-		outfile.write('******************************')
+		resultsfile.write('\n')
+		resultsfile.write('\n******************************')
+		resultsfile.write('\n** ALMOST RESULTS CHANGES ****')
+		resultsfile.write('\n******************************')
 		# Read it in:
 		savedgenresX = []
 		savedseenX = []
@@ -427,12 +428,12 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 					if savedgenresX[i] == finalgenresX[j]:
 						removegenresflagX = 1
 						if savedseenX[i] != finalseenX[j]:
-							outfile.write(savedgenresX[i]+' - Num Seen Changed To '+str(finalseenX[j]))
+							resultsfile.write('\n'+savedgenresX[i]+' - Num Seen Changed To '+str(finalseenX[j]))
 						if savedratedX[i] != finalratedX[j]:
-							outfile.write(savedgenresX[i]+' - Num Rated Changed To '+str(finalratedX[j]))
+							resultsfile.write('\n'+savedgenresX[i]+' - Num Rated Changed To '+str(finalratedX[j]))
 					j = j+1
 				if removegenresflagX == 0:
-					outfile.write(savedgenresX[i]+' - Genre Removed From List! (somehow)')
+					resultsfile.write('\n'+savedgenresX[i]+' - Genre Removed From List! (somehow)')
 			# Find out new entries to add:
 			for i in range(len(finalgenresX)):
 				newgenresflagX = 0
@@ -442,11 +443,11 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 						newgenresflagX = 1
 					j = j+1
 				if newgenresflagX == 0:
-					outfile.write(finalgenresX[i]+' - New Genre To Add!')
-					outfile.write(' - Num Seen = '+str(finalseenX[i]))
-					outfile.write(' - Num Rated = '+str(finalratedX[i]))
+					resultsfile.write('\n'+finalgenresX[i]+' - New Genre To Add!')
+					resultsfile.write('\n - Num Seen = '+str(finalseenX[i]))
+					resultsfile.write('\n - Num Rated = '+str(finalratedX[i]))
 		else:
-			outfile.write('No Difference! Nothing New To Add!')
+			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	
 	# Copy old save file to a temporary file:
 	if datapathXexists == 1:
@@ -455,15 +456,15 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 	copyfile('Saved-data-files/Genres-league-data-'+user+'-X-temp-new.csv','Saved-data-files/Genres-league-data-'+user+'-X.csv')
 	
 	# Print 19-rated genre candidates
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** ALMOST RESULTS ************')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** ALMOST RESULTS ************')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalgenresX)):
-		outfile.write('')
-		outfile.write(finalgenresX[i])
-		outfile.write('Number seen = '+str(finalseenX[i]))
-		outfile.write('Number rated = '+str(finalratedX[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalgenresX[i])
+		resultsfile.write('\nNumber seen = '+str(finalseenX[i]))
+		resultsfile.write('\nNumber rated = '+str(finalratedX[i]))
 	
 	# Also keep all genres with at least 20 watched films and less than 19 rated films
 	# Rank by number seen, then number rated:
@@ -536,10 +537,10 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 	datapath2exists = 0
 	if datapath2.exists():
 		datapath2exists = 1
-		outfile.write('')
-		outfile.write('******************************')
-		outfile.write('** REWATCH RESULTS CHANGES ***')
-		outfile.write('******************************')
+		resultsfile.write('\n')
+		resultsfile.write('\n******************************')
+		resultsfile.write('\n** REWATCH RESULTS CHANGES ***')
+		resultsfile.write('\n******************************')
 		# Read it in:
 		savedgenres2 = []
 		savedseen2 = []
@@ -567,12 +568,12 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 					if savedgenres2[i] == finalgenres2[j]:
 						removegenresflag2 = 1
 						if savedseen2[i] != finalseen2[j]:
-							outfile.write(savedgenres2[i]+' - Num Seen Changed To '+str(finalseen2[j]))
+							resultsfile.write('\n'+savedgenres2[i]+' - Num Seen Changed To '+str(finalseen2[j]))
 						if savedrated2[i] != finalrated2[j]:
-							outfile.write(savedgenres2[i]+' - Num Rated Changed To '+str(finalrated2[j]))
+							resultsfile.write('\n'+savedgenres2[i]+' - Num Rated Changed To '+str(finalrated2[j]))
 					j = j+1
 				if removegenresflag2 == 0:
-					outfile.write(savedgenres2[i]+' - Genre Removed From List! (somehow)')
+					resultsfile.write('\n'+savedgenres2[i]+' - Genre Removed From List! (somehow)')
 			# Find out new entries to add:
 			for i in range(len(finalgenres2)):
 				newgenresflag2 = 0
@@ -582,11 +583,11 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 						newgenresflag2 = 1
 					j = j+1
 				if newgenresflag2 == 0:
-					outfile.write(finalgenres2[i]+' - New Genre To Add!')
-					outfile.write(' - Num Seen = '+str(finalseen2[i]))
-					outfile.write(' - Num Rated = '+str(finalrated2[i]))
+					resultsfile.write('\n'+finalgenres2[i]+' - New Genre To Add!')
+					resultsfile.write('\n - Num Seen = '+str(finalseen2[i]))
+					resultsfile.write('\n - Num Rated = '+str(finalrated2[i]))
 		else:
-			outfile.write('No Difference! Nothing New To Add!')
+			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	
 	# Copy old save file to a temporary file:
 	if datapath2exists == 1:
@@ -595,15 +596,15 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 	copyfile('Saved-data-files/Genres-league-data-'+user+'-other-temp-new.csv','Saved-data-files/Genres-league-data-'+user+'-other.csv')
 	
 	# Print most-watched genre candidates
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** REWATCH RESULTS ***********')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** REWATCH RESULTS ***********')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalgenres2)):
-		outfile.write('')
-		outfile.write(finalgenres2[i])
-		outfile.write('Number seen = '+str(finalseen2[i]))
-		outfile.write('Number rated = '+str(finalrated2[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalgenres2[i])
+		resultsfile.write('\nNumber seen = '+str(finalseen2[i]))
+		resultsfile.write('\nNumber rated = '+str(finalrated2[i]))
 	
 	# Also show the rest of the genres
 	# Rank by number seen, then number rated:
@@ -676,10 +677,10 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 	datapath3exists = 0
 	if datapath3.exists():
 		datapath3exists = 1
-		outfile.write('')
-		outfile.write('******************************')
-		outfile.write('** THE REST RESULTS CHANGES **')
-		outfile.write('******************************')
+		resultsfile.write('\n')
+		resultsfile.write('\n******************************')
+		resultsfile.write('\n** THE REST RESULTS CHANGES **')
+		resultsfile.write('\n******************************')
 		# Read it in:
 		savedgenres3 = []
 		savedseen3 = []
@@ -707,12 +708,12 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 					if savedgenres3[i] == finalgenres3[j]:
 						removegenresflag3 = 1
 						if savedseen3[i] != finalseen3[j]:
-							outfile.write(savedgenres3[i]+' - Num Seen Changed To '+str(finalseen3[j]))
+							resultsfile.write('\n'+savedgenres3[i]+' - Num Seen Changed To '+str(finalseen3[j]))
 						if savedrated3[i] != finalrated3[j]:
-							outfile.write(savedgenres3[i]+' - Num Rated Changed To '+str(finalrated3[j]))
+							resultsfile.write('\n'+savedgenres3[i]+' - Num Rated Changed To '+str(finalrated3[j]))
 					j = j+1
 				if removegenresflag3 == 0:
-					outfile.write(savedgenres3[i]+' - Genre Removed From List! (somehow)')
+					resultsfile.write('\n'+savedgenres3[i]+' - Genre Removed From List! (somehow)')
 			# Find out new entries to add:
 			for i in range(len(finalgenres3)):
 				newgenresflag3 = 0
@@ -722,11 +723,11 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 						newgenresflag3 = 1
 					j = j+1
 				if newgenresflag3 == 0:
-					outfile.write(finalgenres3[i]+' - New Genre To Add!')
-					outfile.write(' - Num Seen = '+str(finalseen3[i]))
-					outfile.write(' - Num Rated = '+str(finalrated3[i]))
+					resultsfile.write('\n'+finalgenres3[i]+' - New Genre To Add!')
+					resultsfile.write('\n - Num Seen = '+str(finalseen3[i]))
+					resultsfile.write('\n - Num Rated = '+str(finalrated3[i]))
 		else:
-			outfile.write('No Difference! Nothing New To Add!')
+			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	
 	# Copy old save file to a temporary file:
 	if datapath3exists == 1:
@@ -735,39 +736,40 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 	copyfile('Saved-data-files/Genres-league-data-'+user+'-other2-temp-new.csv','Saved-data-files/Genres-league-data-'+user+'-other2.csv')
 	
 	# Print the rest of the genre candidates
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** THE REST RESULTS **********')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** THE REST RESULTS **********')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalgenres3)):
-		outfile.write('')
-		outfile.write(finalgenres3[i])
-		outfile.write('Number seen = '+str(finalseen3[i]))
-		outfile.write('Number rated = '+str(finalrated3[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalgenres3[i])
+		resultsfile.write('\nNumber seen = '+str(finalseen3[i]))
+		resultsfile.write('\nNumber rated = '+str(finalrated3[i]))
 	
 	# Print out full results for everything:
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** FULL LEAGUE RESULTS *******')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** FULL LEAGUE RESULTS *******')
+	resultsfile.write('\n******************************')
 	for i in range(len(sfgenres_print)):
-		outfile.write('')
-		outfile.write(sfgenres_print[i])
+		resultsfile.write('\n')
+		resultsfile.write('\n('+str(i+1)+')')
+		resultsfile.write('\n'+sfgenres_print[i])
+		resultsfile.write('\nAvg rating = '+sfavgratings_print[i])
+		resultsfile.write('\nNumber seen = '+sfseen_print[i])
+		resultsfile.write('\nNumber rated = '+sfrated_print[i])
 		for j in range(sffilms_count[i]):
-			outfile.write(sffilms_print[i][j])
-		outfile.write('Avg rating = '+sfavgratings_print[i])
-		outfile.write('Number seen = '+sfseen_print[i])
-		outfile.write('Number rated = '+sfrated_print[i])
+			resultsfile.write('\n'+sffilms_print[i][j])
 	
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** FULL ALMOST RESULTS *******')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** FULL ALMOST RESULTS *******')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalgenresX)):
-		outfile.write('')
-		outfile.write(finalgenresX[i])
-		outfile.write('Number seen = '+str(finalseenX[i]))
-		outfile.write('Number rated = '+str(finalratedX[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalgenresX[i])
+		resultsfile.write('\nNumber seen = '+str(finalseenX[i]))
+		resultsfile.write('\nNumber rated = '+str(finalratedX[i]))
 		for j in range(len(films)):
 			if genres[j] == finalgenresX[i]:
 				if runtimes[j] >= 40:
@@ -778,19 +780,19 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 								skipflag = 1
 					if skipflag == 0:
 						if ratings[j] == '0':
-							outfile.write('   '+films[j])
+							resultsfile.write('\n   '+films[j])
 						else:
-							outfile.write('** '+films[j])
+							resultsfile.write('\n** '+films[j])
 	
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** FULL REWATCH RESULTS ******')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** FULL REWATCH RESULTS ******')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalgenres2)):
-		outfile.write('')
-		outfile.write(finalgenres2[i])
-		outfile.write('Number seen = '+str(finalseen2[i]))
-		outfile.write('Number rated = '+str(finalrated2[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalgenres2[i])
+		resultsfile.write('\nNumber seen = '+str(finalseen2[i]))
+		resultsfile.write('\nNumber rated = '+str(finalrated2[i]))
 		for j in range(len(films)):
 			if genres[j] == finalgenres2[i]:
 				if runtimes[j] >= 40:
@@ -801,19 +803,19 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 								skipflag = 1
 					if skipflag == 0:
 						if ratings[j] == '0':
-							outfile.write('   '+films[j])
+							resultsfile.write('\n   '+films[j])
 						else:
-							outfile.write('** '+films[j])
+							resultsfile.write('\n** '+films[j])
 	
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** FULL THE REST RESULTS *****')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** FULL THE REST RESULTS *****')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalgenres3)):
-		outfile.write('')
-		outfile.write(finalgenres3[i])
-		outfile.write('Number seen = '+str(finalseen3[i]))
-		outfile.write('Number rated = '+str(finalrated3[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalgenres3[i])
+		resultsfile.write('\nNumber seen = '+str(finalseen3[i]))
+		resultsfile.write('\nNumber rated = '+str(finalrated3[i]))
 		for j in range(len(films)):
 			if genres[j] == finalgenres3[i]:
 				if runtimes[j] >= 40:
@@ -824,12 +826,16 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 								skipflag = 1
 					if skipflag == 0:
 						if ratings[j] == '0':
-							outfile.write('   '+films[j])
+							resultsfile.write('\n   '+films[j])
 						else:
-							outfile.write('** '+films[j])
+							resultsfile.write('\n** '+films[j])
 	
 	# Close output file:
-	outfile.close()
+	resultsfile.write('\n')
+	resultsfile.close()
+	print('')
+	print('Results saved to Genres-league/Saved-data-files/Output-'+user+'.txt')
+	print('')
 	
 	# Remove temporary files:
 	if printoutpathexists == 1:
@@ -854,14 +860,3 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 		os.remove('Saved-data-files/Genres-league-data-'+user+'-other-temp-old.csv')
 	if datapath3exists == 1:
 		os.remove('Saved-data-files/Genres-league-data-'+user+'-other2-temp-old.csv')
-
-############################################################################
-############################################################################
-
-type = 'normal'
-user = ''
-films = ''
-ratings = ''
-genres = ''
-runtimes = ''
-directorsleague(type,user,films,ratings,genres,runtimes)

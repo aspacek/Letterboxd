@@ -8,18 +8,22 @@ import sys
 
 import requests
 
+import time
+
+import locale
+
 from Findstrings import findstrings
 from Getstrings import getstrings
 
 ##
 ## Written by Alex Spacek
-## January 2020
+## January 2021
 ##
 
 ############################################################################
 ############################################################################
 
-def getfilminfo(films,what):
+def getfilminfo(films,ratings,what):
 	# For each film, get director(s) and year:
 	print('')
 	starttime = time.time()
@@ -44,12 +48,6 @@ def getfilminfo(films,what):
 		if what[i] == 'runtimes':
 			what_run = 1
 			runtimes = []
-	if what_dir == 1 and what_act == 1:
-			sys.exit('ERROR - in getfilminfo - At the moment, can only do one of: directors, actors, and genres.')
-	elif what_dir == 1 and what_gen == 1:
-			sys.exit('ERROR - in getfilminfo - At the moment, can only do one of: directors, actors, and genres.')
-	elif what_act == 1 and what_gen == 1:
-			sys.exit('ERROR - in getfilminfo - At the moment, can only do one of: directors, actors, and genres.')
 	if what_dir == 1 or what_act == 1 or what_gen == 1:
 		extra_films = []
 		extra_ratings = []
@@ -82,8 +80,15 @@ def getfilminfo(films,what):
 			else:
 				runtime = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t','&nbsp;min',source)
 				locale.setlocale(locale.LC_ALL,'en_US.UTF-8')
-				runtime_int = locale.atoi(runtime)
-				runtimes = runtimes+[runtime_int]
+				if runtime != '':
+					runtime_int = locale.atoi(runtime)
+					runtimes = runtimes+[runtime_int]
+				else:
+					print('')
+					print('** SOMETHING WENT WRONG IN GETTING A RUNTIME **')
+					usertime = int(input('Enter the runtime (in minutes) of '+films[i]+': '))
+					runtimes = runtimes+[usertime]
+					print('')
 		# Get the director(s):
 		if what_dir == 1:
 			# Check on the number of directors:
@@ -103,8 +108,12 @@ def getfilminfo(films,what):
 							extra_films = extra_films+[films[i]]
 							extra_ratings = extra_ratings+[ratings[i]]
 							extra_directors = extra_directors+[directors_temp[j]]
+							if what_act == 1:
+								extra_actors = extra_actors+[' ']
 							if what_yr == 1:
-								extra_years = extra_years+[years[i]]
+								extra_years = extra_years+['none']
+							if what_gen == 1:
+								extra_genres = extra_genres+['none']
 							if what_run == 1:
 								extra_runtimes = extra_runtimes+[runtimes[i]]
 			# If there is one director:
@@ -125,8 +134,12 @@ def getfilminfo(films,what):
 						extra_films = extra_films+[films[i]]
 						extra_ratings = extra_ratings+[ratings[i]]
 						extra_actors = extra_actors+[actors_temp[j]]
+						if what_dir == 1:
+							extra_directors = extra_directors+['none']
 						if what_yr == 1:
-							extra_years = extra_years+[years[i]]
+							extra_years = extra_years+['none']
+						if what_gen == 1:
+							extra_genres = extra_genres+['none']
 						if what_run == 1:
 							extra_runtimes = extra_runtimes+[runtimes[i]]
 			# If there is one actor:
@@ -154,8 +167,12 @@ def getfilminfo(films,what):
 							extra_films = extra_films+[films[i]]
 							extra_ratings = extra_ratings+[ratings[i]]
 							extra_genres = extra_genres+[genres_temp[j]]
+							if what_dir == 1:
+								extra_directors = extra_directors+['none']
+							if what_act == 1:
+								extra_actors = extra_actors+[' ']
 							if what_yr == 1:
-								extra_years = extra_years+[years[i]]
+								extra_years = extra_years+['none']
 							if what_run == 1:
 								extra_runtimes = extra_runtimes+[runtimes[i]]
 			# If there is one genre:

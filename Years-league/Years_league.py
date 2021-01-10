@@ -1,5 +1,5 @@
 #####################
-## Years-league.py ##
+## Years_league.py ##
 #####################
 
 # sys module - reads in input values
@@ -30,7 +30,7 @@ from Getfilminfo import getfilminfo
 
 ##
 ## Written by Alex Spacek
-## December 2020 - January 2020
+## December 2020 - January 2021
 ##
 
 ############################################################################
@@ -50,7 +50,7 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 	if printoutpath.exists():
 		printoutpathexists = 1
 		copyfile('Saved-data-files/Output-'+user+'.txt','Saved-data-files/Output-'+user+'-saved.txt')
-	outfile = open('Saved-data-files/Output-'+user+'.txt','w')
+	resultsfile = open('Saved-data-files/Output-'+user+'.txt','w')
 	
 	# Save backups of all output files in case something goes wrong:
 	outputpath1 = Path('Saved-data-files/Years-league-data-'+user+'.csv')
@@ -74,7 +74,7 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 		films,ratings = getuserfilms(user)
 
 		# Get film info:
-		films,ratings,years,runtimes = getfilminfo(films,['years','runtimes'])
+		films,ratings,years,runtimes = getfilminfo(films,ratings,['years','runtimes'])
 	
 	# Read in films to ignore:
 	ignorefilmsdatapath = Path('Films-that-dont-count.txt')
@@ -230,10 +230,9 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 	datapathexists = 0
 	if datapath.exists():
 		datapathexists = 1
-		outfile.write('')
-		outfile.write('******************************')
-		outfile.write('** LEAGUE RESULTS CHANGES ****')
-		outfile.write('******************************')
+		resultsfile.write('\n******************************')
+		resultsfile.write('\n** LEAGUE RESULTS CHANGES ****')
+		resultsfile.write('\n******************************')
 		# Read it in:
 		savedyears = []
 		savedfilms_count = []
@@ -301,11 +300,11 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 					if savedyears[i] == sfyears_print[j]:
 						removeyearflag = 1
 						if savedavgratings[i] != sfavgratings_print[j]:
-							outfile.write(savedyears[i]+' - Avg Rating Changed To '+sfavgratings_print[j])
+							resultsfile.write('\n'+savedyears[i]+' - Avg Rating Changed To '+sfavgratings_print[j])
 						if savedseen[i] != sfseen_print[j]:
-							outfile.write(savedyears[i]+' - Num Seen Changed To '+sfseen_print[j])
+							resultsfile.write('\n'+savedyears[i]+' - Num Seen Changed To '+sfseen_print[j])
 						if savedrated[i] != sfrated_print[j]:
-							outfile.write(savedyears[i]+' - Num Rated Changed To '+sfrated_print[j])
+							resultsfile.write('\n'+savedyears[i]+' - Num Rated Changed To '+sfrated_print[j])
 						for k in range(savedfilms_count[i]):
 							film_match = 0
 							m = 0
@@ -314,10 +313,10 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 									film_match = 1
 								m = m+1
 							if film_match == 0:
-								outfile.write(savedyears[i]+' - Film Removed From List Or Changed - '+savedfilms[i][k])
+								resultsfile.write('\n'+savedyears[i]+' - Film Removed From List Or Changed - '+savedfilms[i][k])
 					j = j+1
 				if removeyearflag == 0:
-					outfile.write(savedyears[i]+' - Year Removed From List! (somehow)')
+					resultsfile.write('\n'+savedyears[i]+' - Year Removed From List! (somehow)')
 			# Find out new entries to add:
 			for i in range(len(sfyears_print)):
 				newyearflag = 0
@@ -333,27 +332,28 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 									film_match = 1
 								m = m+1
 							if film_match == 0:
-								outfile.write(sfactors_print[i]+' - New film added - '+sffilms_print[i][k])
+								resultsfile.write('\n'+sfyears_print[i]+' - New film added - '+sffilms_print[i][k])
 					j = j+1
 				if newyearflag == 0:
-					outfile.write(sfyears_print[i]+' - New Year To Add!')
-					outfile.write(' - Avg Rating = '+sfavgratings_print[i])
-					outfile.write(' - Num Seen = '+sfseen_print[i])
-					outfile.write(' - Num Rated = '+sfrated_print[i])
+					resultsfile.write('\n'+sfyears_print[i]+' - New Year To Add!')
+					resultsfile.write('\n - Avg Rating = '+sfavgratings_print[i])
+					resultsfile.write('\n - Num Seen = '+sfseen_print[i])
+					resultsfile.write('\n - Num Rated = '+sfrated_print[i])
 		else:
-			outfile.write('No Difference! Nothing New To Add!')
+			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	
 	# Print out results:
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** LEAGUE RESULTS ************')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** LEAGUE RESULTS ************')
+	resultsfile.write('\n******************************')
 	for i in range(len(sfyears_print)):
-		outfile.write('')
-		outfile.write(sfyears_print[i])
-		outfile.write('Avg rating = '+sfavgratings_print[i])
-		outfile.write('Number seen = '+sfseen_print[i])
-		outfile.write('Number rated = '+sfrated_print[i])
+		resultsfile.write('\n')
+		resultsfile.write('\n('+str(i+1)+')')
+		resultsfile.write('\n'+sfyears_print[i])
+		resultsfile.write('\nAvg rating = '+sfavgratings_print[i])
+		resultsfile.write('\nNumber seen = '+sfseen_print[i])
+		resultsfile.write('\nNumber rated = '+sfrated_print[i])
 	
 	# Copy old save file to a temporary file:
 	if datapathexists == 1:
@@ -382,10 +382,10 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 	datapathXexists = 0
 	if datapathX.exists():
 		datapathXexists = 1
-		outfile.write('')
-		outfile.write('******************************')
-		outfile.write('** ALMOST RESULTS CHANGES ****')
-		outfile.write('******************************')
+		resultsfile.write('\n')
+		resultsfile.write('\n******************************')
+		resultsfile.write('\n** ALMOST RESULTS CHANGES ****')
+		resultsfile.write('\n******************************')
 		# Read it in:
 		savedyearsX = []
 		savedseenX = []
@@ -413,12 +413,12 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 					if savedyearsX[i] == finalyearsX[j]:
 						removeyearflagX = 1
 						if savedseenX[i] != finalseenX[j]:
-							outfile.write(savedyearsX[i]+' - Num Seen Changed To '+str(finalseenX[j]))
+							resultsfile.write('\n'+savedyearsX[i]+' - Num Seen Changed To '+str(finalseenX[j]))
 						if savedratedX[i] != finalratedX[j]:
-							outfile.write(savedyearsX[i]+' - Num Rated Changed To '+str(finalratedX[j]))
+							resultsfile.write('\n'+savedyearsX[i]+' - Num Rated Changed To '+str(finalratedX[j]))
 					j = j+1
 				if removeyearflagX == 0:
-					outfile.write(savedyearsX[i]+' - Year Removed From List! (somehow)')
+					resultsfile.write('\n'+savedyearsX[i]+' - Year Removed From List! (somehow)')
 			# Find out new entries to add:
 			for i in range(len(finalyearsX)):
 				newyearflagX = 0
@@ -428,11 +428,11 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 						newyearflagX = 1
 					j = j+1
 				if newyearflagX == 0:
-					outfile.write(finalyearsX[i]+' - New Year To Add!')
-					outfile.write(' - Num Seen = '+str(finalseenX[i]))
-					outfile.write(' - Num Rated = '+str(finalratedX[i]))
+					resultsfile.write('\n'+finalyearsX[i]+' - New Year To Add!')
+					resultsfile.write('\n - Num Seen = '+str(finalseenX[i]))
+					resultsfile.write('\n - Num Rated = '+str(finalratedX[i]))
 		else:
-			outfile.write('No Difference! Nothing New To Add!')
+			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	
 	# Copy old save file to a temporary file:
 	if datapathXexists == 1:
@@ -441,15 +441,15 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 	copyfile('Saved-data-files/Years-league-data-'+user+'-X-temp-new.csv','Saved-data-files/Years-league-data-'+user+'-X.csv')
 	
 	# Print 9-rated year candidates
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** ALMOST RESULTS ************')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** ALMOST RESULTS ************')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalyearsX)):
-		outfile.write('')
-		outfile.write(finalyearsX[i])
-		outfile.write('Number seen = '+str(finalseenX[i]))
-		outfile.write('Number rated = '+str(finalratedX[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalyearsX[i])
+		resultsfile.write('\nNumber seen = '+str(finalseenX[i]))
+		resultsfile.write('\nNumber rated = '+str(finalratedX[i]))
 	
 	# Also keep all years with at least 10 watched films and less than 9 rated films
 	# Rank by number seen, then number rated:
@@ -522,10 +522,10 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 	datapath2exists = 0
 	if datapath2.exists():
 		datapath2exists = 1
-		outfile.write('')
-		outfile.write('******************************')
-		outfile.write('** REWATCH RESULTS CHANGES ***')
-		outfile.write('******************************')
+		resultsfile.write('\n')
+		resultsfile.write('\n******************************')
+		resultsfile.write('\n** REWATCH RESULTS CHANGES ***')
+		resultsfile.write('\n******************************')
 		# Read it in:
 		savedyears2 = []
 		savedseen2 = []
@@ -553,12 +553,12 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 					if savedyears2[i] == finalyears2[j]:
 						removeyearflag2 = 1
 						if savedseen2[i] != finalseen2[j]:
-							outfile.write(savedyears2[i]+' - Num Seen Changed To '+str(finalseen2[j]))
+							resultsfile.write('\n'+savedyears2[i]+' - Num Seen Changed To '+str(finalseen2[j]))
 						if savedrated2[i] != finalrated2[j]:
-							outfile.write(savedyears2[i]+' - Num Rated Changed To '+str(finalrated2[j]))
+							resultsfile.write('\n'+savedyears2[i]+' - Num Rated Changed To '+str(finalrated2[j]))
 					j = j+1
 				if removeyearflag2 == 0:
-					outfile.write(savedyears2[i]+' - Year Removed From List! (somehow)')
+					resultsfile.write('\n'+savedyears2[i]+' - Year Removed From List! (somehow)')
 			# Find out new entries to add:
 			for i in range(len(finalyears2)):
 				newyearflag2 = 0
@@ -568,11 +568,11 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 						newyearflag2 = 1
 					j = j+1
 				if newyearflag2 == 0:
-					outfile.write(finalyears2[i]+' - New Year To Add!')
-					outfile.write(' - Num Seen = '+str(finalseen2[i]))
-					outfile.write(' - Num Rated = '+str(finalrated2[i]))
+					resultsfile.write('\n'+finalyears2[i]+' - New Year To Add!')
+					resultsfile.write('\n - Num Seen = '+str(finalseen2[i]))
+					resultsfile.write('\n - Num Rated = '+str(finalrated2[i]))
 		else:
-			outfile.write('No Difference! Nothing New To Add!')
+			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	
 	# Copy old save file to a temporary file:
 	if datapath2exists == 1:
@@ -581,39 +581,40 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 	copyfile('Saved-data-files/Years-league-data-'+user+'-other-temp-new.csv','Saved-data-files/Years-league-data-'+user+'-other.csv')
 	
 	# Print most-watched year candidates
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** REWATCH RESULTS ***********')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** REWATCH RESULTS ***********')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalyears2)):
-		outfile.write('')
-		outfile.write(finalyears2[i])
-		outfile.write('Number seen = '+str(finalseen2[i]))
-		outfile.write('Number rated = '+str(finalrated2[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalyears2[i])
+		resultsfile.write('\nNumber seen = '+str(finalseen2[i]))
+		resultsfile.write('\nNumber rated = '+str(finalrated2[i]))
 	
 	# Print out full results for everything:
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** FULL LEAGUE RESULTS *******')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** FULL LEAGUE RESULTS *******')
+	resultsfile.write('\n******************************')
 	for i in range(len(sfyears_print)):
-		outfile.write('')
-		outfile.write(sfyears_print[i])
+		resultsfile.write('\n')
+		resultsfile.write('\n('+str(i+1)+')')
+		resultsfile.write('\n'+sfyears_print[i])
+		resultsfile.write('\nAvg rating = '+sfavgratings_print[i])
+		resultsfile.write('\nNumber seen = '+sfseen_print[i])
+		resultsfile.write('\nNumber rated = '+sfrated_print[i])
 		for j in range(sffilms_count[i]):
-			outfile.write(sffilms_print[i][j])
-		outfile.write('Avg rating = '+sfavgratings_print[i])
-		outfile.write('Number seen = '+sfseen_print[i])
-		outfile.write('Number rated = '+sfrated_print[i])
+			resultsfile.write('\n'+sffilms_print[i][j])
 	
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** FULL ALMOST RESULTS *******')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** FULL ALMOST RESULTS *******')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalyearsX)):
-		outfile.write('')
-		outfile.write(finalyearsX[i])
-		outfile.write('Number seen = '+str(finalseenX[i]))
-		outfile.write('Number rated = '+str(finalratedX[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalyearsX[i])
+		resultsfile.write('\nNumber seen = '+str(finalseenX[i]))
+		resultsfile.write('\nNumber rated = '+str(finalratedX[i]))
 		for j in range(len(films)):
 			if years[j] == finalyearsX[i]:
 				if runtimes[j] >= 40:
@@ -624,21 +625,21 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 								skipflag = 1
 					if skipflag == 0:
 						if ratings[j] == '0':
-							outfile.write('   '+films[j])
+							resultsfile.write('\n   '+films[j])
 						elif int(ratings[j]) < 6:
-							outfile.write('-- '+films[j])
+							resultsfile.write('\n-- '+films[j])
 						else:
-							outfile.write('** '+films[j])
+							resultsfile.write('\n** '+films[j])
 	
-	outfile.write('')
-	outfile.write('******************************')
-	outfile.write('** FULL REWATCH RESULTS ******')
-	outfile.write('******************************')
+	resultsfile.write('\n')
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** FULL REWATCH RESULTS ******')
+	resultsfile.write('\n******************************')
 	for i in range(len(finalyears2)):
-		outfile.write('')
-		outfile.write(finalyears2[i])
-		outfile.write('Number seen = '+str(finalseen2[i]))
-		outfile.write('Number rated = '+str(finalrated2[i]))
+		resultsfile.write('\n')
+		resultsfile.write('\n'+finalyears2[i])
+		resultsfile.write('\nNumber seen = '+str(finalseen2[i]))
+		resultsfile.write('\nNumber rated = '+str(finalrated2[i]))
 		for j in range(len(films)):
 			if years[j] == finalyears2[i]:
 				if runtimes[j] >= 40:
@@ -649,14 +650,18 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 								skipflag = 1
 					if skipflag == 0:
 						if ratings[j] == '0':
-							outfile.write('   '+films[j])
+							resultsfile.write('\n   '+films[j])
 						elif int(ratings[j]) < 6:
-							outfile.write('-- '+films[j])
+							resultsfile.write('\n-- '+films[j])
 						else:
-							outfile.write('** '+films[j])
+							resultsfile.write('\n** '+films[j])
 	
 	# Close output file:
-	outfile.close()
+	resultsfile.write('\n')
+	resultsfile.close()
+	print('')
+	print('Results saved to Years-league/Saved-data-files/Output-'+user+'.txt')
+	print('')
 	
 	# Remove temporary files:
 	if printoutpathexists == 1:
@@ -676,14 +681,3 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 		os.remove('Saved-data-files/Years-league-data-'+user+'-X-temp-old.csv')
 	if datapath2exists == 1:
 		os.remove('Saved-data-files/Years-league-data-'+user+'-other-temp-old.csv')
-
-############################################################################
-############################################################################
-
-type = 'normal'
-user = ''
-films = ''
-ratings = ''
-years = ''
-runtimes = ''
-yearsleague(type,user,films,ratings,years,runtimes)

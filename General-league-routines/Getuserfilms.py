@@ -13,7 +13,7 @@ from Getstrings import getstrings
 
 ##
 ## Written by Alex Spacek
-## January 2020
+## January 2021
 ##
 
 ############################################################################
