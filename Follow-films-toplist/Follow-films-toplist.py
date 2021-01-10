@@ -12,7 +12,7 @@ import numpy as np
 
 ##
 ## Written by Alex Spacek
-## January 2020
+## January 2021
 ##
 
 ##################################
