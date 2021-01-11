@@ -340,6 +340,17 @@ def directorsleague(type,user,films,ratings,directors,runtimes):
 					resultsfile.write('\n - Avg Rating = '+sfavgratings_print[i])
 					resultsfile.write('\n - Num Seen = '+sfseen_print[i])
 					resultsfile.write('\n - Num Rated = '+sfrated_print[i])
+			# Print old and new rankings together:
+			maxval = max(len(saveddirectors),len(sfdirectors_print))
+			resultsfile.write('\n')
+			resultsfile.write('\nRankings Old/New')
+			for i in range(maxval):
+				if i < len(saveddirectors) and i < len(sfdirectors_print):
+					resultsfile.write('\n('+str(i+1)+') '+saveddirectors[i]+' -- '+sfdirectors_print[i])
+				elif i >= len(saveddirectors):
+					resultsfile.write('\n('+str(i+1)+')            -- '+sfdirectors_print[i])
+				elif i >= len(sfdirectors_print):
+					resultsfile.write('\n('+str(i+1)+') '+saveddirectors[i]+' --           ')
 		else:
 			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	

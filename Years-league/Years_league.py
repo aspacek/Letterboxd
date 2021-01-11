@@ -339,6 +339,17 @@ def yearsleague(type,user,films,ratings,years,runtimes):
 					resultsfile.write('\n - Avg Rating = '+sfavgratings_print[i])
 					resultsfile.write('\n - Num Seen = '+sfseen_print[i])
 					resultsfile.write('\n - Num Rated = '+sfrated_print[i])
+			# Print old and new rankings together:
+			maxval = max(len(savedyears),len(sfyears_print))
+			resultsfile.write('\n')
+			resultsfile.write('\nRankings Old/New')
+			for i in range(maxval):
+				if i < len(savedyears) and i < len(sfyears_print):
+					resultsfile.write('\n('+str(i+1)+') '+savedyears[i]+' -- '+sfyears_print[i])
+				elif i >= len(savedyears):
+					resultsfile.write('\n('+str(i+1)+')            -- '+sfyears_print[i])
+				elif i >= len(sfyears_print):
+					resultsfile.write('\n('+str(i+1)+') '+savedyears[i]+' --           ')
 		else:
 			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	

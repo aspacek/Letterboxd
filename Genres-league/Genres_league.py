@@ -354,6 +354,17 @@ def genresleague(type,user,films,ratings,genres,runtimes):
 					resultsfile.write('\n - Avg Rating = '+sfavgratings_print[i])
 					resultsfile.write('\n - Num Seen = '+sfseen_print[i])
 					resultsfile.write('\n - Num Rated = '+sfrated_print[i])
+			# Print old and new rankings together:
+			maxval = max(len(savedgenres),len(sfgenres_print))
+			resultsfile.write('\n')
+			resultsfile.write('\nRankings Old/New')
+			for i in range(maxval):
+				if i < len(savedgenres) and i < len(sfgenres_print):
+					resultsfile.write('\n('+str(i+1)+') '+savedgenres[i]+' -- '+sfgenres_print[i])
+				elif i >= len(savedgenres):
+					resultsfile.write('\n('+str(i+1)+')            -- '+sfgenres_print[i])
+				elif i >= len(sfgenres_print):
+					resultsfile.write('\n('+str(i+1)+') '+savedgenres[i]+' --           ')
 		else:
 			resultsfile.write('\nNo Difference! Nothing New To Add!')
 	
