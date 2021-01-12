@@ -10,6 +10,15 @@ import requests
 
 import numpy as np
 
+# csv module - read and write csv files
+import csv
+
+from pathlib import Path
+
+from shutil import copyfile
+
+import os
+
 sys.path.insert(0, "../General-league-routines")
 from Findstrings import findstrings
 from Getstrings import getstrings
@@ -35,6 +44,26 @@ number = int(input('\nEnter the number of top films to get: '))
 
 # Minimum number of ratings:
 min_ratings = int(input('\nEnter the minimum number of ratings a film should have: '))
+
+# Backup previous output file and open a new one:
+printoutpath = Path('Saved-data-files/Output-'+user+'-'+str(number)+'-'+str(min_ratings)+'.txt')
+printoutpathexists = 0
+if printoutpath.exists():
+	printoutpathexists = 1
+	copyfile('Saved-data-files/Output-'+user+'-'+str(number)+'-'+str(min_ratings)+'.txt','Saved-data-files/Output-'+user+'-'+str(number)+'-'+str(min_ratings)+'-saved.txt')
+resultsfile = open('Saved-data-files/Output-'+user+'-'+str(number)+'-'+str(min_ratings)+'.txt','w')
+
+# Save backups of all output files in case something goes wrong:
+outputpath1 = Path('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv')
+outputpath2 = Path('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv')
+outputpath1exists = 0
+outputpath2exists = 0
+if outputpath1.exists():
+	outputpath1exists = 1
+	copyfile('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv','Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'-saved.csv')
+if outputpath2.exists():
+	outputpath2exists = 1
+	copyfile('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv','Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'-saved.csv')
 
 # Get all usernames that the given username follows:
 # Initialize results:
@@ -185,22 +214,137 @@ if len(final_films) > number:
 	final_averages = final_averages[:number]
 	final_counts = final_counts[:number]
 
+# Save the results to a temporary file:
+with open('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-new.csv', mode='w') as outfile:
+	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+	for i in range(len(final_films)):
+		csvwriter.writerow([final_films[i],str(final_averages[i]),str(final_counts[i])])
+with open('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-new.csv', mode='w') as outfile:
+	csvwriter = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+	for i in range(len(popular_films)):
+		csvwriter.writerow([popular_films[i],str(popular_counts[i])])
+
+# Check if saved files exist:
+datapath1 = Path('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv')
+datapath1exists = 0
+if datapath1.exists():
+	datapath1exists = 1
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** OVERALL RESULTS CHANGES ***')
+	resultsfile.write('\n******************************')
+	# Read it in:
+	savedfilms = []
+	savedaverages = []
+	savedcounts = []
+	with open('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv') as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=',')
+		for row in csv_reader:
+			savedfilms = savedfilms+[row[0]]
+			savedaverages = savedaverages+[float(row[1])]
+			savedcounts = savedcounts+[int(row[2])]
+	# Check if the results are different:
+	differentflag = 0
+	if final_films != savedfilms:
+		differentflag = 1
+	if differentflag == 1:
+		# Find the differences:
+		for i in range(len(final_films)):
+			if final_films[i] != savedfilms[i]:
+				found = 0
+				j = 0
+				while found == 0 and j < len(savedfilms):
+					if savedfilms[j] == final_films[i]:
+						found = 1
+						resultsfile.write('\n'+final_films[i]+' moved from '+str(j+1)+' to '+str(i+1))
+					j = j+1
+				if found == 0:
+					resultsfile.write('\n'+final_films[i]+' added to the list at '+str(i+1))
+		for i in range(len(savedfilms)):
+			if savedfilms[i] != final_films[i]:
+				found = 0
+				j = 0
+				while found == 0 and j < len(final_films):
+					if final_films[j] == savedfilms[i]:
+						found = 1
+					j = j+1
+				if found == 0:
+					resultsfile.write('\n'+savedfilms[i]+' removed from the list')
+	else:
+		resultsfile.write('\nNo changes to overall results!')
+datapath2 = Path('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv')
+datapath2exists = 0
+if datapath2.exists():
+	datapath2exists = 1
+	resultsfile.write('\n******************************')
+	resultsfile.write('\n** POPULAR RESULTS CHANGES ***')
+	resultsfile.write('\n******************************')
+	# Read it in:
+	savedfilms = []
+	savedcounts = []
+	with open('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv') as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=',')
+		for row in csv_reader:
+			savedfilms = savedfilms+[row[0]]
+			savedcounts = savedcounts+[int(row[1])]
+	# Check if the results are different:
+	differentflag = 0
+	if popular_films != savedfilms:
+		differentflag = 1
+	elif popular_counts != savedcounts:
+		differentflag = 1 
+	if differentflag == 1:
+		# Just print the two lists:
+		resultsfile.write('\nNum - Old - New')
+		for i in range(len(popular_films)):
+			resultsfile.write('\n('+str(i+1)+') '+savedfilms[i]+' '+str(savedcounts[i])+' - '+popular_films[i]+' '+str(popular_counts[i]))
+	else:
+		resultsfile.write('\nNo changes to popular results!')
+
+# Copy old save files to temporary files:
+if datapath1exists == 1:
+	copyfile('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv','Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-old.csv')
+if datapath2exists == 1:
+	copyfile('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv','Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-old.csv')
+# Copy new temporary files to the save files:
+copyfile('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-new.csv','Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv')
+copyfile('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-new.csv','Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'.csv')
+
 # Print out results:
-print('')
-print('*****************************************************')
-print('*****************************************************')
-print('')
-print('The top '+str(number)+' rated films, by the users that '+user+' follows.')
-print('\nThe minimum number of ratings to qualify = '+str(min_ratings))
-print('')
-print('Ranking / Avg Rating / # Ratings / Film')
-print('--------/------------/-----------/-----')
+resultsfile.write('\n*****************************************************')
+resultsfile.write('\n*****************************************************')
+resultsfile.write('\n')
+resultsfile.write('\nThe top '+str(number)+' rated films, by the users that '+user+' follows.')
+resultsfile.write('\n')
+resultsfile.write('\nThe minimum number of ratings to qualify = '+str(min_ratings))
+resultsfile.write('\n')
+resultsfile.write('\nRanking / Avg Rating / # Ratings / Film')
+resultsfile.write('\n--------/------------/-----------/-----')
 for i in range(len(final_films)):
-	print('{:<7d} / {:<10.3f} / {:<9d} / {}'.format(i+1,final_averages[i],final_counts[i],final_films[i]))
-print('')
-print('The 20 most popular films:\n')
-print('Ranking / # Ratings / Film')
-print('--------/-----------/-----')
+	resultsfile.write('\n{:<7d} / {:<10.3f} / {:<9d} / {}'.format(i+1,final_averages[i],final_counts[i],final_films[i]))
+resultsfile.write('\n')
+resultsfile.write('\nThe 20 most popular films:\n')
+resultsfile.write('\nRanking / # Ratings / Film')
+resultsfile.write('\n--------/-----------/-----')
 for i in range(len(popular_films)):
-	print('{:<7d} / {:<9d} / {}'.format(i+1,popular_counts[i],popular_films[i]))
+	resultsfile.write('\n{:<7d} / {:<9d} / {}'.format(i+1,popular_counts[i],popular_films[i]))
+resultsfile.write('\n')
+
+# Close output file:
+resultsfile.close()
 print('')
+print('Results saved to Follow-films-toplist/Saved-data-files/Output-'+user+'-'+str(number)+'-'+str(min_ratings)+'.txt')
+print('')
+
+# Remove temporary files:
+if printoutpathexists == 1:
+	os.remove('Saved-data-files/Output-'+user+'-'+str(number)+'-'+str(min_ratings)+'-saved.txt')
+if outputpath1exists == 1:
+	os.remove('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'-saved.csv')
+if outputpath2exists == 1:
+	os.remove('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'-saved.csv')
+os.remove('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-new.csv')
+os.remove('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-new.csv')
+if datapath1exists == 1:
+	os.remove('Saved-data-files/Follow-films-toplist-data-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-old.csv')
+if datapath2exists == 1:
+	os.remove('Saved-data-files/Follow-films-toplist-counts-'+user+'-'+str(number)+'-'+str(min_ratings)+'-temp-old.csv')
