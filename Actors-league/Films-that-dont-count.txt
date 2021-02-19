@@ -99,3 +99,4 @@ xallx,Mickie McGowan
 xallx,Frank Oz
 xallx,Phil Proctor
 xallx,Frank Welker
+xallx,Jimmy Star
