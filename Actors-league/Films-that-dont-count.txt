@@ -14,6 +14,7 @@ between-two-ferns-the-movie,Will Ferrell
 black-mirror-uss-callister,Kirsten Dunst
 bo-burnham-make-happy,xallx
 bo-burnham-what,xallx
+borat-subsequent-moviefilm,Tom Hanks
 the-boys-the-sherman-brothers-story,xallx
 call-me-lucky,xallx
 casting-by,xallx
@@ -50,6 +51,7 @@ the-hitchhikers-guide-to-the-galaxy-2005,Warwick Davis
 the-holiday,Dustin Hoffman
 honey-i-shrunk-the-kids,Frank Welker
 hot-chocolate-2004,xallx
+howard-2018,xallx
 the-hunchback-of-notre-dame-1996,Frank Welker
 i-know-that-voice,xallx
 the-interview-2014,Joseph Gordon-Levitt
@@ -100,3 +102,4 @@ xallx,Frank Oz
 xallx,Phil Proctor
 xallx,Frank Welker
 xallx,Jimmy Star
+xallx,Patrick Pinney

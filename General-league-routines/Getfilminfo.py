@@ -74,11 +74,20 @@ def getfilminfo(films,ratings,what):
 			years = years+[getstrings('first','releaseYear: "','",',source)]
 		# Get the runtime, if there is one:
 		if what_run == 1:
-			runtime_check = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t','More details at',source)
-			if runtime_check == '\n\t\t\t\t\n\t\t\t\t\t':
+			runtime_check = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t\t','More details at',source)
+			runtime_check_test = ['0','1','2','3','4','5','6','7','8','9']
+			runtime_check_flag = 0
+			for val in runtime_check_test:
+				if runtime_check[0] == val:
+					runtime_check_flag = 1
+			if runtime_check_flag == 0:
+				print('')
+				print(url)
+				print('No runtime found')
+				print(runtime_check)
 				runtimes = runtimes+[-1]
 			else:
-				runtime = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t','&nbsp;min',source)
+				runtime = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t\t','&nbsp;min',source)
 				locale.setlocale(locale.LC_ALL,'en_US.UTF-8')
 				if runtime != '':
 					runtime_int = locale.atoi(runtime)
