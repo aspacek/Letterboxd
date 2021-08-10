@@ -27,6 +27,7 @@ black-mirror-the-national-anthem
 black-mirror-the-waldo-moment
 black-mirror-uss-callister
 black-mirror-white-bear
+bo-burnham-inside
 bo-burnham-make-happy
 bo-burnham-what
 bob-rubin-oddities-and-rarities
@@ -51,6 +52,7 @@ death-to-2020
 demetri-martin-live-at-the-time
 demetri-martin-the-overthinker
 derren-brown-pushed-to-the-edge
+donald-glover-weirdo
 doug-benson-doug-dynasty
 family-guy-presents-blue-harvest
 family-guy-presents-its-a-trap
@@ -67,6 +69,7 @@ garfunkel-and-oates-trying-to-be-special
 grammys-greatest-stories-a-60th-anniversary-special
 hannah-gadsby-douglas
 hannah-gadsby-nanette
+hasan-minhaj-homecoming-king
 hot-chocolate-2004
 inside-pink-floyd-a-critical-review-1967-1974
 james-acaster-repertoire
@@ -79,6 +82,7 @@ john-mulaney-new-in-town
 john-mulaney-the-comeback-kid
 jonbenet-an-american-murder-mystery
 journey-greatest-hits-dvd-1978-1997
+katherine-ryan-glitter-room
 leslie-jones-time-machine
 louis-ck-2017
 louis-ck-chewed-up
@@ -99,7 +103,10 @@ monty-python-live-at-aspen
 monty-python-live-at-the-hollywood-bowl
 the-murder-of-laci-peterson
 natalie-wood-an-american-murder-mystery
+nate-bargatze-the-greatest-average-american
+nate-bargatze-the-tennessee-kid
 nick-kroll-thank-you-very-cool
+norm-macdonald-hitlers-dog-gossip-trickery
 oh-hello-on-broadway
 patton-oswalt-annihilation
 patton-oswalt-i-love-everything
@@ -112,14 +119,19 @@ ricky-gervais-humanity
 rockos-modern-life-static-cling
 ronny-chieng-asian-comedian-destroys-america
 sarah-silverman-a-speck-of-dust
+seth-meyers-lobby-baby
 seth-rogens-hilarity-for-charity
 the-sklar-brothers-what-are-we-talking-about
 the-staircase
 star-trek-deep-space-nine-the-emissary
 star-trek-voyager-dark-frontier
 steve-martin-and-martin-short-an-evening-you-will-forget-for-the-rest-of-your-life
+taylor-tomlinson-quarter-life-crisis
 this-is-america-charlie-brown
+tiffany-haddish-black-mitzvah
 tiger-king-murder-mayhem-and-madness
+trevor-noah-afraid-of-the-dark
+trevor-noah-son-of-patricia
 unabomber-in-his-own-words
 unorthodox-2020
 a-very-murray-christmas
