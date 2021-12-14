@@ -79,8 +79,9 @@ users = users+getstrings('all','class="avatar -a40" href="/','/"',source)
 # Now loop through the rest of the pages:
 page = 2
 # Check if a second page exists:
+nextpage = '<div class="paginate-nextprev">'
 lastpage = '<div class="paginate-nextprev paginate-disabled"><span class="next">'
-if source.find(lastpage) == -1:
+if source.find(lastpage) == -1 and source.find(nextpage) != -1:
 	flag = 0
 else:
 	flag = 1
