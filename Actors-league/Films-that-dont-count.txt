@@ -82,6 +82,7 @@ the-return-of-jafar,Jeff Bennett
 rihie-rih,Frank Welker
 the-santa-clause,Frank Welker
 seth-rogens-hilarity-for-charity,xallx
+shang-chi-and-the-legend-of-the-ten-rings,Mark Ruffalo
 star-wars-the-force-awakens,Bill Hader
 star-wars-the-force-awakens,Warwick Davis
 star-wars-the-last-jedi,Warwick Davis
@@ -103,3 +104,4 @@ xallx,Phil Proctor
 xallx,Frank Welker
 xallx,Jimmy Star
 xallx,Patrick Pinney
+xallx,Cabran E. Chamberlain

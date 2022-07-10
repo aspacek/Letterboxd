@@ -43,6 +43,7 @@ dave-chappelle-killin-them-softly
 dave-chappelle-sticks-stones
 dave-chappelle-the-age-of-spin
 dave-chappelle-the-bird-revelation
+dave-chappelle-the-closer
 dave-chappelle-the-kennedy-center-mark-twain-prize
 david-blaine-real-or-magic
 david-blaine-what-is-magic
@@ -111,6 +112,7 @@ oh-hello-on-broadway
 patton-oswalt-annihilation
 patton-oswalt-i-love-everything
 patton-oswalt-talking-for-clapping
+phil-wang-philly-philly-wang-wang
 the-queens-gambit
 reggie-watts-spatial
 richard-pryor-live-in-concert
