@@ -101,15 +101,15 @@ def getfilminfo(films,ratings,what):
 		# Get the director(s):
 		if what_dir == 1:
 			# Check on the number of directors:
-			director_check = list(findstrings('<h3><span>Director</span></h3>',source))
+			director_check = list(findstrings('"sameAs":"/director/',source))
 			# If there are multiple directors or no directors:
 			if director_check == []:
-				nodirector_check = list(findstrings('<h3><span>Directors</span></h3>',source))
+				nodirector_check = list(findstrings('"sameAs":"/director/',source))
 				if nodirector_check == []:
 					directors = directors+['none']
 				else:
-					subtext = getstrings('first','<h3><span>Directors</span></h3>','</div>',source)
-					directors_temp = getstrings('all','class="text-slug">','</a>',subtext)
+					subtext = getstrings('first','"director":[{','}]',source)
+					directors_temp = getstrings('all','"Person","name":"','"',subtext)
 					for j in range(len(directors_temp)):
 						if j == 0:
 							directors = directors+[directors_temp[j]]
@@ -127,8 +127,8 @@ def getfilminfo(films,ratings,what):
 								extra_runtimes = extra_runtimes+[runtimes[i]]
 			# If there is one director:
 			else:
-				subtext = getstrings('first','<h3><span>Director</span></h3>','</div>',source)
-				directors = directors+[getstrings('first','class="text-slug">','</a>',subtext)]
+				subtext = getstrings('first','"director":[{','}]',source)
+				directors = directors+[getstrings('first','"Person","name":"','"',subtext)]
 		# Get the actors:
 		if what_act == 1:
 			# Check on the number of actors:
