@@ -103,7 +103,7 @@ def getfilminfo(films,ratings,what):
 			# Check on the number of directors:
 			director_check = list(findstrings('"sameAs":"/director/',source))
 			# If there are multiple directors or no directors:
-			if director_check == []:
+			if director_check == [] or len(director_check)>1:
 				nodirector_check = list(findstrings('"sameAs":"/director/',source))
 				if nodirector_check == []:
 					directors = directors+['none']
