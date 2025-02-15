@@ -25,7 +25,6 @@ from Getstrings import getstrings
 
 def getfilminfo(films,ratings,what):
 	# For each film, get director(s) and year:
-	print('')
 	starttime = time.time()
 	what_dir = 0
 	what_act = 0
