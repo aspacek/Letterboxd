@@ -60,5 +60,37 @@ def numsort(arraytosort,arraytomatch,isstring,highestfirst):
 					sys.exit('ERROR - in function "numsort" - Arrays not sorted correctly.')
 	# Sort with lowest value first:
 	else:
-		sys.exit('ERROR - in function "numsort" - highestfirst = 0 not implemented yet.')
+#		sys.exit('ERROR - in function "numsort" - highestfirst = 0 not implemented yet.')
+		# Loop through everything until sorted:
+		flag = 0
+		loc = 0
+		while flag == 0:
+			# Find min value:
+			minval = min(arraytosort)
+			# Put all min values next in the final arrays:
+			toremove = []
+			for i in range(len(arraytosort)):
+				if arraytosort[i] == minval:
+					finalarraytosort[loc] = arraytosort[i]
+					finalarraytomatch[loc] = arraytomatch[i]
+					loc = loc+1
+					toremove = toremove+[i]
+			# Remove values already used, from back to front:
+			toremove.reverse()
+			for i in range(len(toremove)):
+				del arraytosort[toremove[i]]
+				del arraytomatch[toremove[i]]
+			# If arrays are empty, done:
+			if arraytosort == []:
+				flag = 1
+		# Make sure arrays are completely filled:
+		for i in range(len(finalarraytosort)):
+			if finalarraytosort[i] == -1:
+				sys.exit('ERROR - in function "numsort" - Arrays not sorted correctly.')
+			if isstring == 1:
+				if finalarraytomatch[i] == '-1':
+					sys.exit('ERROR - in function "numsort" - Arrays not sorted correctly.')
+			else:
+				if finalarraytomatch[i] == -1:
+					sys.exit('ERROR - in function "numsort" - Arrays not sorted correctly.')
 	return finalarraytosort,finalarraytomatch
