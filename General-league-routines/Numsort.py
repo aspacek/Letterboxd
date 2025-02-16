@@ -60,7 +60,6 @@ def numsort(arraytosort,arraytomatch,isstring,highestfirst):
 					sys.exit('ERROR - in function "numsort" - Arrays not sorted correctly.')
 	# Sort with lowest value first:
 	else:
-#		sys.exit('ERROR - in function "numsort" - highestfirst = 0 not implemented yet.')
 		# Loop through everything until sorted:
 		flag = 0
 		loc = 0
