@@ -39,12 +39,16 @@ def getuserfilms(user):
 	# Start on page 1, get the films:
 	films = films+getstrings('all','data-film-slug="','"',source)
 	# Also get the ratings:
-	ratingscheck = getstrings('all','-darker rated-','"',source)
-	for val in ratingscheck:
-		if val == '':
+	# Also get the ratings:
+	# Grab all film info blocks:
+	film_blocks = getstrings('all','<li class="poster-container">','</li>',source)
+	# For each, check if there is a rating, and if so, get it:
+	for block in film_blocks:
+		ratings_check = list(findstrings('-darker rated-',block))
+		if ratings_check == []:
 			ratings = ratings+['0']
 		else:
-			ratings = ratings+[val]
+			ratings = ratings+[getstrings('first','-darker rated-','"',block)]
 	print('')
 	print('Page 1/'+str(pages)+' Done')
 	# Now loop through the rest of the pages:
@@ -57,11 +61,14 @@ def getuserfilms(user):
 		# Get the films:
 		films = films+getstrings('all','data-film-slug="','"',source)
 		# Also get the ratings:
-		ratingscheck = getstrings('all','-darker rated-','"',source)
-		for val in ratingscheck:
-			if val == '':
+		# Grab all film info blocks:
+		film_blocks = getstrings('all','<li class="poster-container">','</li>',source)
+		# For each, check if there is a rating, and if so, get it:
+		for block in film_blocks:
+			ratings_check = list(findstrings('-darker rated-',block))
+			if ratings_check == []:
 				ratings = ratings+['0']
 			else:
-				ratings = ratings+[val]
+				ratings = ratings+[getstrings('first','-darker rated-','"',block)]
 		print('Page '+page+'/'+str(pages)+' Done')
 	return films,ratings
