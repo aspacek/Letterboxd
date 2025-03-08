@@ -14,6 +14,7 @@ from Getstrings import getstrings
 ##
 ## Written by Alex Spacek
 ## January 2021
+## Last updated: March 2025
 ##
 
 ############################################################################
@@ -26,22 +27,24 @@ def getuserfilms(user):
 	r = requests.get(url)
 	source = r.text
 	# Find the number of pages
-	pages = int(getstrings('last','href="/'+user+'/films/page/','/">',source))
+	# Grab a bunch of page numbers as strings
+	pages = getstrings('all','/page/','/">',source)
+	# Turn them into integers
+	pages = [int(num) for num in pages]
+	# Get the largest number, which should represent the total number of pages
+	pages = max(pages)
 	# Initialize results:
 	films = []
 	ratings = []
 	# Start on page 1, get the films:
-	films = films+getstrings('all','data-film-slug="/film/','/"',source)
+	films = films+getstrings('all','data-film-slug="','"',source)
 	# Also get the ratings:
-	# Grab all film info blocks:
-	film_blocks = getstrings('all','data-film-slug="/film/','</p>',source)
-	# For each, check if there is a rating, and if so, get it:
-	for i in range(len(film_blocks)):
-		ratings_check = list(findstrings('-darker rated-',film_blocks[i]))
-		if ratings_check == []:
+	ratingscheck = getstrings('all','-darker rated-','"',source)
+	for val in ratingscheck:
+		if val == '':
 			ratings = ratings+['0']
 		else:
-			ratings = ratings+[getstrings('first','-darker rated-','">',film_blocks[i])]
+			ratings = ratings+[val]
 	print('')
 	print('Page 1/'+str(pages)+' Done')
 	# Now loop through the rest of the pages:
@@ -52,16 +55,13 @@ def getuserfilms(user):
 		r = requests.get(url+'page/'+page+'/')
 		source = r.text
 		# Get the films:
-		films = films+getstrings('all','data-film-slug="/film/','/"',source)
+		films = films+getstrings('all','data-film-slug="','"',source)
 		# Also get the ratings:
-		# Grab all film info blocks:
-		film_blocks = getstrings('all','data-film-slug="/film/','</p>',source)
-		# For each, check if there is a rating, and if so, get it:
-		for i in range(len(film_blocks)):
-			ratings_check = list(findstrings('-darker rated-',film_blocks[i]))
-			if ratings_check == []:
+		ratingscheck = getstrings('all','-darker rated-','"',source)
+		for val in ratingscheck:
+			if val == '':
 				ratings = ratings+['0']
 			else:
-				ratings = ratings+[getstrings('first','-darker rated-','">',film_blocks[i])]
+				ratings = ratings+[val]
 		print('Page '+page+'/'+str(pages)+' Done')
 	return films,ratings
