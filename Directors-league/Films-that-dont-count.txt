@@ -1,7 +1,9 @@
 the-adventures-of-ichabod-and-mr-toad,all
+aladdin,John Musker
 aziz-ansari-right-now,all
 bo-burnham-make-happy,all
 bo-burnham-what,all
+champions-2023,Bobby Farrelly
 chelsea-peretti-one-of-the-greats,all
 chris-rock-tamborine,all
 dave-chappelle-deep-in-the-heart-of-texas,all
@@ -12,13 +14,34 @@ dave-chappelle-sticks-stones,all
 dave-chappelle-the-age-of-spin,all
 dave-chappelle-the-bird-revelation,all
 david-cross-let-america-laugh,all
+dear-santa-2024,Bobby Farrelly
+dumb-and-dumber,Peter Farrelly
 fantasia,all
 fred-armisen-standup-for-drummers,all
+the-great-mouse-detective,John Musker
+the-greatest-beer-run-ever,Peter Farrelly
+green-book,Peter Farrelly
+the-heartbreak-kid,Bobby Farrelly
+hercules-1997,John Musker
 hot-chocolate-2004,all
 jen-kirkman-im-gonna-die-alone-and-i-feel-fine,all
+john-mulaney-new-in-town,all
+kingpin,Bobby Farrelly
+the-little-mermaid,John Musker
 marc-maron-thinky-pain,all
-the-meaning-of-life-1983,Terry Gilliam
+me-myself-irene,Bobby Farrelly
 melody-time,all
+middleditch-schwartz,all
+moana-2016,John Musker
+movie-43,all
+nate-bargatze-the-tennessee-kid,all
+nick-kroll-thank-you-very-cool,all
+the-princess-and-the-frog,John Musker
 the-reluctant-dragon,all
+ricky-stanicky,Peter Farrelly
 saludos-amigos,all
+seth-rogens-hilarity-for-charity,all
+shallow-hal,Bobby Farrelly
+theres-something-about-mary,Bobby Farrelly
 yeah-right,all
+your-friend-nate-bargatze,all

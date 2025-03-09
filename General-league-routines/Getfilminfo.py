@@ -76,13 +76,17 @@ def getfilminfo(films,ratings,what):
 			runtime_check = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t\t\n\t\t\t\t\t','More at',source)
 			runtime_check_test = ['0','1','2','3','4','5','6','7','8','9']
 			runtime_check_flag = 0
-			for val in runtime_check_test:
-				if runtime_check[0] == val:
-					runtime_check_flag = 1
-			if runtime_check_flag == 0:
+			if runtime_check == '':
+				runtime_check_flag = 2
+			else:
+				for val in runtime_check_test:
+					if runtime_check[0] == val:
+						runtime_check_flag = 1
+			if runtime_check_flag == 0 or runtime_check_flag == 2:
 				print('')
 				print(url)
 				print('No runtime found')
+				print('runtime_check_flag = '+str(runtime_check_flag))
 				print(runtime_check)
 				runtimes = runtimes+[-1]
 			else:
