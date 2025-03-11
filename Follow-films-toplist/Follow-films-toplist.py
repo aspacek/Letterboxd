@@ -127,10 +127,10 @@ for i in range(len(users)):
 	if films_check != []:
 		print('This user has no films!')
 	else:
-		films = films+getstrings('all','data-film-slug="/film/','/"',source)
+		films = films+getstrings('all','data-film-slug="','"',source)
 		# Also get the ratings:
 		# Grab all film info blocks:
-		film_blocks = getstrings('all','data-film-slug="/film/','</p>',source)
+		film_blocks = getstrings('all','<li class="poster-container">','</li>',source)
 		# For each, check if there is a rating, and if so, get it:
 		for i in range(len(film_blocks)):
 			ratings_check = list(findstrings('-darker rated-',film_blocks[i]))
@@ -147,10 +147,10 @@ for i in range(len(users)):
 			r = requests.get(url+'page/'+page+'/')
 			source = r.text
 			# Get the films:
-			films = films+getstrings('all','data-film-slug="/film/','/"',source)
+			films = films+getstrings('all','data-film-slug="','"',source)
 			# Also get the ratings:
 			# Grab all film info blocks:
-			film_blocks = getstrings('all','data-film-slug="/film/','</p>',source)
+			film_blocks = getstrings('all','<li class="poster-container">','</li>',source)
 			# For each, check if there is a rating, and if so, get it:
 			for i in range(len(film_blocks)):
 				ratings_check = list(findstrings('-darker rated-',film_blocks[i]))
