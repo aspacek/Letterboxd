@@ -164,14 +164,15 @@ def actorsleague(type,user,films,ratings,actors,runtimes):
 	number_rated_temp = [val for val in number_rated]
 	sseen2,srated2 = numsort(number_seen_temp,number_rated_temp,0,1)
 	
-	# Keep all actors with at least 10 rated films
+	# Keep all actors with at least nrated rated films
+	nrated = 15
 	# Get average rating
 	finalactors = []
 	finalavgratings = []
 	finalseen = []
 	finalrated = []
 	for i in range(len(sactors)):
-		if srated[i] >= 10:
+		if srated[i] >= nrated:
 			finalactors = finalactors+[sactors[i]]
 			finalseen = finalseen+[sseen[i]]
 			finalrated = finalrated+[srated[i]]
@@ -390,12 +391,12 @@ def actorsleague(type,user,films,ratings,actors,runtimes):
 	# Copy new temporary file to the save file:
 	copyfile('Saved-data-files/Actors-league-data-'+user+'-temp-new.csv','Saved-data-files/Actors-league-data-'+user+'.csv')
 	
-	# Also keep all actors with 9 rated films:
+	# Also keep all actors with nrated-1 rated films:
 	finalactorsX = []
 	finalseenX = []
 	finalratedX = []
 	for i in range(len(sactors2)):
-		if srated2[i] == 9:
+		if srated2[i] == nrated-1:
 			finalactorsX = finalactorsX+[sactors2[i]]
 			finalseenX = finalseenX+[sseen2[i]]
 			finalratedX = finalratedX+[srated2[i]]
@@ -480,13 +481,13 @@ def actorsleague(type,user,films,ratings,actors,runtimes):
 		resultsfile.write('\nNumber seen = '+str(finalseenX[i]))
 		resultsfile.write('\nNumber rated = '+str(finalratedX[i]))
 	
-	# Also keep all actors with at least 20 watched films and less than 9 rated films
+	# Also keep all actors with at least nrated+5 watched films and less than nrated-1 rated films
 	# Rank by number seen, then number rated:
 	finalactors2 = []
 	finalseen2 = []
 	finalrated2 = []
 	for i in range(len(sactors2)):
-		if sseen2[i] >= 20 and srated2[i] <= 8:
+		if sseen2[i] >= nrated+5 and srated2[i] <= nrated-2:
 			if len(finalactors2) > 0:
 				ratesortflag = 0
 				j = 0

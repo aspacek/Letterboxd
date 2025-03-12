@@ -7,9 +7,13 @@ aladdin-2019,Alan Tudyk
 anastasia-1997,J.K. Simmons
 and-the-oscar-goes-to,xallx
 annie-hall,Sigourney Weaver
+ant-man-and-the-wasp-quantumania,Owen Wilson
+avengers-endgame,Samuel L. Jackson
+avengers-infinity-war,Samuel L. Jackson
 aziz-ansari-right-now,xallx
 the-beatles-eight-days-a-week-the-touring-years,xallx
 beauty-and-the-beast-1991,Frank Welker
+being-john-malkovich,Brad Pitt
 between-two-ferns-the-movie,Benedict Cumberbatch
 between-two-ferns-the-movie,Paul Rudd
 between-two-ferns-the-movie,Will Ferrell
@@ -19,6 +23,7 @@ bo-burnham-what,xallx
 borat-subsequent-moviefilm,Tom Hanks
 the-boys-the-sherman-brothers-story,xallx
 call-me-lucky,xallx
+captain-marvel,Scarlett Johansson
 casting-by,xallx
 certifiably-jonathan,xallx
 chelsea-peretti-one-of-the-greats,xallx
@@ -41,10 +46,13 @@ dear-mr-watterson,xallx
 death-to-2020,xallx
 diana-in-her-own-words,xallx
 dont-think-twice,Ben Stiller
+eyes-wide-shut,Cate Blanchett
 fahrenheit-9-11,xallx
 family-guy-presents-its-a-trap,Anne Hathaway
+ferrell-takes-the-field,xallx
 fred-armisen-standup-for-drummers,xallx
 friends-the-reunion,xallx
+girl-yeah-right,Owen Wilson
 the-great-mouse-detective,Frank Welker
 guardians-of-the-galaxy,Seth Green
 guardians-of-the-galaxy-vol-2,Seth Green
@@ -60,6 +68,7 @@ howard-2018,xallx
 the-hunchback-of-notre-dame-1996,Frank Welker
 i-know-that-voice,xallx
 the-interview-2014,Joseph Gordon-Levitt
+iron-man-2008,Samuel L. Jackson
 james-and-the-giant-peach,Jeff Bennett
 jen-kirkman-im-gonna-die-alone-and-i-feel-fine,xallx
 jim-andy-the-great-beyond,xallx
@@ -94,11 +103,13 @@ rihie-rih,Frank Welker
 the-santa-clause,Frank Welker
 seth-rogens-hilarity-for-charity,xallx
 shang-chi-and-the-legend-of-the-ten-rings,Mark Ruffalo
+snl50-the-anniversary-special,xallx
 star-wars-the-force-awakens,Bill Hader
 star-wars-the-force-awakens,Warwick Davis
 star-wars-the-last-jedi,Warwick Davis
 steve-martin-and-martin-short-an-evening-you-will-forget-for-the-rest-of-your-life,xallx
 super-high-me,xallx
+thor,Samuel L. Jackson
 tommy-boy,Frank Welker
 a-very-murray-christmas,xallx
 waking-sleeping-beauty,xallx
