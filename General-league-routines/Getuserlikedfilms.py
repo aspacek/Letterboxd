@@ -28,12 +28,11 @@ def getuserlikedfilms(user):
 	r = requests.get(url)
 	source = r.text
 	# Find the number of pages
-	# Grab a bunch of page numbers as strings
-	pages = getstrings('all','/page/','/">',source)
-	# Turn them into integers
-	pages = [int(num) for num in pages]
-	# Get the largest number, which should represent the total number of pages
-	pages = max(pages)
+	# Grab the number of liked films
+	numberoffilms = int(getstrings('first','likes/films/" class="tooltip" title="','&nbsp;',source))
+	# There are 12x6 = 72 films per page
+	# Total number of pages is quotient plus one
+	pages = numberoffilms//72 + 1
 	# Initialize results:
 	films = []
 	ratings = []
