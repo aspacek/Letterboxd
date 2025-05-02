@@ -70,7 +70,7 @@ def getfilminfo(films,ratings,what):
 		film_name = getstrings('last','name: "','",',source)
 		# Get the film year:
 		if what_yr == 1:
-			years = years+[getstrings('first','data.production.releaseYear = ',';',source)]
+			years = years+[getstrings('first','<div class="releaseyear"><a href="/films/year/','/">',source)]
 		# Get the runtime, if there is one:
 		if what_run == 1:
 			runtime_check = getstrings('first','<p class="text-link text-footer">\n\t\t\t\t\t\n\t\t\t\t\t','More at',source)
