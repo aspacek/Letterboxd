@@ -11,6 +11,9 @@ import requests
 from Findstrings import findstrings
 from Getstrings import getstrings
 
+# time module - lets us wait
+import time
+
 ##
 ## Written by Alex Spacek
 ## Copied from Getuserfilms.py
@@ -22,11 +25,14 @@ from Getstrings import getstrings
 ############################################################################
 
 def getuserlikedfilms(user):
+	# How long to wait between Letterboxd page reads, in seconds
+	wait_time_secs = 15
 	# The base url:
 	url = 'https://letterboxd.com/'+user+'/likes/films/'
 	# Grab source code for the first page:
 	r = requests.get(url)
 	source = r.text
+	time.sleep(wait_time_secs)
 	# Find the number of pages
 	# Grab the number of liked films
 	numberoffilms = int(getstrings('first','likes/films/" class="tooltip" title="','&nbsp;',source))
@@ -58,6 +64,7 @@ def getuserlikedfilms(user):
 		# Grab source code of the page:
 		r = requests.get(url+'page/'+page+'/')
 		source = r.text
+		time.sleep(wait_time_secs)
 		# Get the films:
 		films = films+getstrings('all','data-film-slug="','"',source)
 		# Also get the ratings:
