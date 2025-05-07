@@ -8,6 +8,7 @@ import sys
 
 import requests
 
+# time module - lets us wait
 import time
 
 import locale
@@ -24,6 +25,8 @@ from Getstrings import getstrings
 ############################################################################
 
 def getfilminfo(films,ratings,what):
+	# How long to wait between Letterboxd page reads, in seconds
+	wait_time_secs = 15
 	# For each film, get director(s) and year:
 	starttime = time.time()
 	what_dir = 0
@@ -66,6 +69,7 @@ def getfilminfo(films,ratings,what):
 		# Grab source code for the film's page:
 		r = requests.get(url)
 		source = r.text
+		time.sleep(wait_time_secs)
 		# Get the film title:
 		film_name = getstrings('last','name: "','",',source)
 		# Get the film year:
@@ -159,6 +163,7 @@ def getfilminfo(films,ratings,what):
 				actors = actors+[getstrings('first','class="text-slug tooltip">','</a>',source)]
 			# If there are no actors:
 			else:
+				print('Weird - No Actors - '+films[i])
 				actors = actors+[' ']
 		# Get the genres:
 		if what_gen == 1:
